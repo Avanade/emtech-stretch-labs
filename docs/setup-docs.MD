@@ -1,4 +1,5 @@
 # setup-docs
+
 Run the following commands to install graphviz, and set up an environment to be able to generate documentation images.
 
 `brew install graphviz`

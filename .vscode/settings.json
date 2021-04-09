@@ -1,5 +1,5 @@
 {
-    "python.pythonPath": "/usr/local/Caskroom/miniconda/base/envs/stretchlabs/bin/python",
+    "python.pythonPath": "/opt/anaconda3/envs/stretchlabs/bin/python",
     "workbench.colorCustomizations": {
         "activityBar.activeBackground": "#fbed80",
         "activityBar.activeBorder": "#06b9a5",

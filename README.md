@@ -5,6 +5,9 @@
 Repositories related to Avanade's exploration with Rocos, NextMind and Hello Robot.
 emtech-stretch-labs is available under the [MIT Licence](./LICENCE).
 
+### Devices Referenced
+- [NextMind](https://www.next-mind.com/)
+- [Stretch Research Edition](https://hello-robot.com/product)
 
 ## Contact
 Feel free to contact the team on Twitter, either [Chris](https://twitter.com/sealjay_clj) or [Fergus](https://twitter.com/FergusKidd). For bugs, please [raise an issue on GitHub](https://github.com/Avanade/emtech-stretch-labs/issues).

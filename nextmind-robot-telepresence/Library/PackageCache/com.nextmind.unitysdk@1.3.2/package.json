@@ -1,0 +1,28 @@
+{
+  "name": "com.nextmind.unitysdk",
+  "displayName": "NextMind SDK",
+  "version": "1.3.2",
+  "unity": "2019.4",
+  "description": "NextMind SDK contains the resources you need to build your first apps leveraging the NextMind technology.",
+  "keywords": [
+    "unity",
+    "sdk",
+    "bci",
+    "brain",
+    "controller",
+    "interface",
+    "mind"
+  ],
+  "author": {
+    "name": "NextMind",
+    "email": "support@next-mind.com",
+    "url": "https://www.next-mind.com"
+  },
+  "samples": [
+    {
+      "displayName": "Examples",
+      "description": "Example scenes and assets for the NextMind SDK.",
+      "path": "Samples~/Examples"
+    }
+  ]
+}

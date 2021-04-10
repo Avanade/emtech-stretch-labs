@@ -1,0 +1,24 @@
+   graph LR
+    subgraph user[User Control]
+        nm[NextMind Unity App]
+    end
+    subgraph cloud[Message Router]
+        AppService[Cloud App]
+    end
+    subgraph dmp[Device Management Platform]
+        Rocos
+        Hub[IoT Hub]
+    end
+    subgraph agent[Agent Running on Robot]
+        Ros[Ros Agent]
+        Py[Python Agent]
+    end
+    nm-->AppService
+    AppService-->HM{Control model?}
+    HM -->| Rocos | Rocos
+    Rocos --> Ros
+    HM --> | Azure IoT Hub | Hub
+    Hub --> Py
+    note{{Rocos is likely to be a better option for controlling a fleet of robots, versus installing an IoT hub agent on each robot.}}
+    note-.-HM;
+    style note fill:#d4edda,stroke:#000,stroke-width:2px,color:#000,stroke-dasharray: 5 5

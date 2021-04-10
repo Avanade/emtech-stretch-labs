@@ -403,6 +403,7 @@ InitTestScene*.unity
 .vscode/*
 !.vscode/tasks.json
 !.vscode/launch.json
+!.vscode/extensions.json
 *.code-workspace
 
 ### VisualStudioCode Patch ###
@@ -792,6 +793,6 @@ FodyWeavers.xsd
 
 # Custom rules (everything added below won't be overriden by 'Generate .gitignore File' if you use 'Update' option)
 
-docs/codegen/grpc-logo.png
-docs/codegen/unity-69-logo-png-transparent.png
-control-agent/teletubby.proto
+cloud-app/teletubby.proto
+docs/diagrams-as-code/unity-69-logo-png-transparent.png
+docs/diagrams-as-code/grpc-logo.png

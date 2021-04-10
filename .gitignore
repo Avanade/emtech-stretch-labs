@@ -403,6 +403,7 @@ InitTestScene*.unity
 .vscode/*
 !.vscode/tasks.json
 !.vscode/launch.json
+!.vscode/extensions.json
 *.code-workspace
 
 ### VisualStudioCode Patch ###

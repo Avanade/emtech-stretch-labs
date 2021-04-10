@@ -1,0 +1,7 @@
+config:
+  azure-native:location: UKSouth
+  azure-native:environment: public
+  project-compliance:rg-useremailtag: emtech
+  project-compliance:rg-purpose: Stretch Labs Exploration
+  project-compliance:rg_environment: dev
+  labs:platform: iot-hub

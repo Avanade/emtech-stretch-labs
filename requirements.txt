@@ -1,4 +1,6 @@
 
 -r requirements-dev.txt
 -r requirements-docs.txt
--r requirements-controlagent.txt
+-r requirements-infra.txt
+-r requirements-cloud-app.txt
+-r requirements-python-agent.txt

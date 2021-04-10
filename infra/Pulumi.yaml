@@ -1,0 +1,7 @@
+name: stretch-labs
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: IoT Cloud Infrastructure for managing Stretch RE3 and integration with
+  various platforms.

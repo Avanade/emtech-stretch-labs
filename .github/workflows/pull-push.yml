@@ -1,4 +1,4 @@
-name: TODO workflow
+name: Run on Push and Pull Requests to main
 on:
   push:
     branches:
@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
-    - name: Run tdg-github-action
+    - name: Create Issues for Todos in Python Code
       uses: ribtoks/tdg-github-action@master
       with:
         TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -19,4 +19,7 @@ jobs:
         SHA: ${{ github.sha }}
         REF: ${{ github.ref }}
         INCLUDE_PATTERN: "\\.(py)$"
-        
+    - name: Scan for licence compliance (slcan.io)
+      uses: ShiftLeftSecurity/scan-action@master
+      with:
+        type: "credscan,python,depscan"

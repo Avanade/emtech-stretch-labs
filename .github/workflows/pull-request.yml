@@ -1,0 +1,39 @@
+name: Run on Push and Pull Requests to main
+on:
+  pull_request:
+    types: [assigned, opened, reopened]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cache vdb
+        uses: actions/cache@v2
+        with:
+          path: |
+            ${{ github.workspace }}/vdb
+          key: ${{ runner.os }}
+      - name: Scan for licence compliance (slcan.io)
+        uses: ShiftLeftSecurity/scan-action@master
+        with:
+          type: "credscan,depscan"
+        env:
+          VDB_HOME: ${{ github.workspace }}/vdb
+          WORKSPACE: https://github.com/${{ github.repository }}/blob/${{ github.sha }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SCAN_AUTO_BUILD: true
+      - name: Upload scan reports
+        uses: actions/upload-artifact@v1.0.0
+        with:
+          name: shiftleft-scan-reports
+          path: reports
+      - name: Upload SARIF report
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: reports
+      - name: License Checker from py-liccheck
+        uses: andersy005/gh-action-py-liccheck@main
+        with:
+          strategy-ini-file: ./pyproject.toml
+          level: standard
+          requirements-txt-file: ./requirements.txt
+          no-deps: true

@@ -1,0 +1,22 @@
+name: Run on Push and Pull Requests to main
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "!docs/**"
+      - "!nextmind-robot-telepresence/Library/PackageCache/**"
+      - "!nextmind-robot-telepresence/Library/ScriptAssemblies/**"
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Create Issues for Todos in Python Code
+        uses: ribtoks/tdg-github-action@master
+        with:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          SHA: ${{ github.sha }}
+          REF: ${{ github.ref }}
+          INCLUDE_PATTERN: "\\.(py)$"

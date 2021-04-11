@@ -3,7 +3,7 @@ on:
   pull_request:
     types: [assigned, opened, reopened]
 jobs:
-  build:
+  scanleft:
     runs-on: ubuntu-latest
     steps:
       - name: Cache vdb
@@ -26,6 +26,9 @@ jobs:
         with:
           name: shiftleft-scan-reports
           path: reports
+  pylicence:
+    runs-on: ubuntu-latest
+    steps:
       - name: License Checker from py-liccheck
         uses: andersy005/gh-action-py-liccheck@main
         with:

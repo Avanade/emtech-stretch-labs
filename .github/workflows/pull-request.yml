@@ -1,5 +1,6 @@
 name: Run on opened and assigned Pull Requests
 on:
+  workflow_dispatch:
   pull_request:
     types: [assigned, opened, reopened]
 jobs:
@@ -29,6 +30,18 @@ jobs:
   pylicence:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
       - name: License Checker from py-liccheck
         uses: andersy005/gh-action-py-liccheck@main
         with:

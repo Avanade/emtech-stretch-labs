@@ -21,13 +21,3 @@ jobs:
           SHA: ${{ github.sha }}
           REF: ${{ github.ref }}
           INCLUDE_PATTERN: "\\.(py)$"
-  pylicence:
-    runs-on: ubuntu-latest
-    steps:
-      - name: License Checker from py-liccheck
-        uses: andersy005/gh-action-py-liccheck@main
-        with:
-          strategy-ini-file: ./pyproject.toml
-          level: standard
-          requirements-txt-file: ./requirements.txt
-          no-deps: true

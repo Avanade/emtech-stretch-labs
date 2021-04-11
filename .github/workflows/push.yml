@@ -8,7 +8,7 @@ on:
       - "!nextmind-robot-telepresence/Library/PackageCache/**"
       - "!nextmind-robot-telepresence/Library/ScriptAssemblies/**"
 jobs:
-  build:
+  todos:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
@@ -20,6 +20,9 @@ jobs:
           SHA: ${{ github.sha }}
           REF: ${{ github.ref }}
           INCLUDE_PATTERN: "\\.(py)$"
+  pylicence:
+    runs-on: ubuntu-latest
+    steps:
       - name: License Checker from py-liccheck
         uses: andersy005/gh-action-py-liccheck@main
         with:

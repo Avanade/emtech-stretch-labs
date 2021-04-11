@@ -16,7 +16,7 @@ jobs:
       - name: Scan for licence compliance (slcan.io)
         uses: ShiftLeftSecurity/scan-action@master
         with:
-          type: "credscan,depscan"
+          type: "credscan,python,depscan"
         env:
           VDB_HOME: ${{ github.workspace }}/vdb
           WORKSPACE: https://github.com/${{ github.repository }}/blob/${{ github.sha }}

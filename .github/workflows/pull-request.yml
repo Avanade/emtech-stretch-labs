@@ -1,4 +1,4 @@
-name: Run on Push and Pull Requests to main
+name: Run on opened and assigned Pull Requests
 on:
   pull_request:
     types: [assigned, opened, reopened]
@@ -26,10 +26,6 @@ jobs:
         with:
           name: shiftleft-scan-reports
           path: reports
-      - name: Upload SARIF report
-        uses: github/codeql-action/upload-sarif@v1
-        with:
-          sarif_file: reports
       - name: License Checker from py-liccheck
         uses: andersy005/gh-action-py-liccheck@main
         with:

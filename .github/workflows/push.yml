@@ -1,4 +1,4 @@
-name: Run on Push and Pull Requests to main
+name: Run on Push to main
 on:
   push:
     branches:

@@ -18,4 +18,5 @@ jobs:
         REPO: ${{ github.repository }}
         SHA: ${{ github.sha }}
         REF: ${{ github.ref }}
+        INCLUDE_PATTERN: "\\.(py)$"
         

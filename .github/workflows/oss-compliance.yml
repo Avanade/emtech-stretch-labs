@@ -3,6 +3,13 @@ on:
   workflow_dispatch:
   pull_request:
     types: [assigned, opened, reopened]
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - "docs/**"
+      - "nextmind-robot-telepresence/Library/PackageCache/**"
+      - "nextmind-robot-telepresence/Library/ScriptAssemblies/**"
 jobs:
   scanleft:
     runs-on: ubuntu-latest

@@ -1,4 +1,4 @@
-name: Run on opened and assigned Pull Requests
+name: OSS Licence Compliance
 on:
   workflow_dispatch:
   pull_request:

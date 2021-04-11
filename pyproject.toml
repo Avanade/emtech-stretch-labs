@@ -1,10 +1,29 @@
 [tool.liccheck]
 # Authorized and unauthorized licenses in lowercase - MIT and Apache preferred
 authorized_licenses = [
+        "new bsd",
+        "new bsd license",
+        "simplified bsd",
         "apache",
         "apache 2.0",
         "apache software license",
         "apache software",
+        "gnu lgpl",
+        "isc license",
+        "isc license (iscl)",
         "mit",
         "mit license",
+        "python software foundation license",
+
+]
+
+unauthorized_licenses = [
+        "gpl v3",
+        "gpl v2",
+        "zpl 2.1",
+        "lgpl with exceptions or zpl",
+        "agpl",
+        "agpl v3",
+        "original bsd",
+        "eupl"
 ]

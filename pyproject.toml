@@ -1,0 +1,10 @@
+[tool.liccheck]
+# Authorized and unauthorized licenses in LOWER CASE
+authorized_licenses = [
+        "apache",
+        "apache 2.0",
+        "apache software license",
+        "apache software",
+        "mit",
+        "mit license",
+]

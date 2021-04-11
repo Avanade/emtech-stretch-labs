@@ -1,4 +1,4 @@
-name: Run on Push to main
+name: Issues and work tracking
 on:
   workflow_dispatch:
   push:

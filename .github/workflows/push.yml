@@ -1,12 +1,13 @@
 name: Run on Push to main
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
-    paths:
-      - "!docs/**"
-      - "!nextmind-robot-telepresence/Library/PackageCache/**"
-      - "!nextmind-robot-telepresence/Library/ScriptAssemblies/**"
+    paths-ignore:
+      - "docs/**"
+      - "nextmind-robot-telepresence/Library/PackageCache/**"
+      - "nextmind-robot-telepresence/Library/ScriptAssemblies/**"
 jobs:
   todos:
     runs-on: ubuntu-latest

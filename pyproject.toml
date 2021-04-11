@@ -1,5 +1,5 @@
 [tool.liccheck]
-# Authorized and unauthorized licenses in LOWER CASE
+# Authorized and unauthorized licenses in lowercase - MIT and Apache preferred
 authorized_licenses = [
         "apache",
         "apache 2.0",

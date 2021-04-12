@@ -796,3 +796,9 @@ FodyWeavers.xsd
 cloud-app/teletubby.proto
 docs/diagrams-as-code/unity-69-logo-png-transparent.png
 docs/diagrams-as-code/grpc-logo.png
+
+teletubby.proto
+teletubby_pb2.py
+teletubby_pb2_grpc.py
+
+config.json

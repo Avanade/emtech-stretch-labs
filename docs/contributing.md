@@ -1,5 +1,5 @@
 # Contributing
-Please feel free to contribute code, ideas, improvements, and patches - please just make sure you follow a couple of guidelines, and see our [code of conduct](docs/CODE_OF_CONDUCT.md).
+Please feel free to contribute code, ideas, improvements, and patches - please just make sure you follow a couple of guidelines, and see our [code of conduct](CODE_OF_CONDUCT.md).
 ## Commit Approach
 This repository uses [Commitizen](https://github.com/commitizen/cz-cli#making-your-repo-commitizen-friendly) to support the use of [semantic commits](https://nitayneeman.com/posts/understanding-semantic-commit-messages-using-git-and-angular/#common-types), which requires you to have node and commitizen installed, as well as the plugin we're using.
 

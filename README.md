@@ -19,4 +19,4 @@ The `docs` folder contains [more detailed documentation](docs/start-here.md), in
 Feel free to contact the team on Twitter, either [Chris](https://twitter.com/sealjay_clj) or [Fergus](https://twitter.com/FergusKidd). For bugs, please [raise an issue on GitHub](https://github.com/Avanade/emtech-stretch-labs/issues).
 
 ## Contributing
-Contributions are welcome. See [the docs](docs/contributing.md) for more, as well as our [code of conduct](docs/CODE_OF_CONDUCT.MD).
+Contributions are welcome. See [the docs](docs/contributing.md) for more, as well as our [code of conduct](docs/CODE_OF_CONDUCT.md).

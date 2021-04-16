@@ -14,6 +14,16 @@ from azure.cognitiveservices.speech import (
 )
 from azure.cognitiveservices.speech.audio import AudioOutputConfig
 
+from datetime import datetime, timedelta
+from azure.storage.blob import (
+    BlobClient,
+    BlobServiceClient,
+    generate_blob_sas,
+    BlobSasPermissions,
+    ResourceTypes,
+    AccountSasPermissions,
+)
+
 import http.client, urllib.request, urllib.parse, urllib.error, base64
 
 import json
@@ -45,6 +55,18 @@ def speak(text):
         speech_config=speech_config, audio_config=audio_config
     )
     synthesizer.speak_text_async(text)
+
+
+def uploadBlob(blobBytes):
+    name = datetime.now().strftime("%d/%m/%Y-%H:%M:%S")
+    conn, container, name, key = getBlobKeys()
+    blob = BlobClient.from_connection_string(
+        conn_str=conn,
+        container_name=container,
+        blob_name=name,
+    )
+
+    blob.upload_blob(blobBytes)
 
 
 class ObjectDetector:
@@ -129,6 +151,8 @@ class ObjectDetector:
         return None
 
     def apply_to_image(self, rgb_image, draw_output=False):
+
+        uploadBlob(rgb_image)
 
         original_height, original_width, num_color = rgb_image.shape
 

@@ -6,6 +6,17 @@ from azure.cognitiveservices.speech import (
 )
 from azure.cognitiveservices.speech.audio import AudioOutputConfig
 
+from datetime import datetime, timedelta
+from azure.storage.blob import (
+    BlobClient,
+    BlobServiceClient,
+    generate_blob_sas,
+    BlobSasPermissions,
+    ResourceTypes,
+    AccountSasPermissions,
+)
+
+
 import http.client, urllib.request, urllib.parse, urllib.error, base64
 
 import json
@@ -36,6 +47,48 @@ def getVisionKeys():
         url = data["visionUrl"]
 
     return key, url
+
+
+def getBlobKeys():
+    __location__ = os.path.realpath(
+        os.path.join(os.getcwd(), os.path.dirname(__file__))
+    )
+
+    with open(os.path.join(__location__, "config.json")) as json_file:
+        data = json.load(json_file)
+        conn = data["blobConnection"]
+        container = data["blobContainer"]
+        name = data["blobstore"]
+        key = data["blobKey"]
+
+    return conn, container, name, key
+
+
+def blobSas(blobName):
+
+    conn, container, name, key = getBlobKeys()
+
+    sas_token = generate_blob_sas(
+        account_name=name,
+        account_key=key,
+        blob_name=blobName,
+        container_name=container,
+        permission=BlobSasPermissions(read=True),
+        expiry=datetime.utcnow() + timedelta(hours=1),
+    )
+
+    url = (
+        "https://"
+        + name
+        + ".blob.core.windows.net/"
+        + container
+        + "/"
+        + blobName
+        + "?"
+        + sas_token
+    )
+
+    return url
 
 
 def speak(text):
@@ -85,6 +138,22 @@ def recognize(imgUrl):
     return json.loads(data)
 
 
+def uploadBlob(blobBytes):
+    name = datetime.now().strftime("%d/%m/%Y-%H:%M:%S")
+    conn, container, name, key = getBlobKeys()
+    blob = BlobClient.from_connection_string(
+        conn_str=conn,
+        container_name=container,
+        blob_name=name,
+    )
+
+    blob.upload_blob(blobBytes)
+
+
 result = recognize("https://robots.ieee.org/robots/stretch/stretch-1200x630.jpg")
+
+speak("I can see" + str(result["description"]["captions"][0]["text"]))
+
+result = recognize(blobSas("pythontest"))
 
 speak("I can see" + str(result["description"]["captions"][0]["text"]))

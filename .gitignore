@@ -797,3 +797,4 @@ cloud-app/teletubby.proto
 docs/diagrams-as-code/unity-69-logo-png-transparent.png
 docs/diagrams-as-code/grpc-logo.png
 config.json
+control-agent/text-to-speech/config.json

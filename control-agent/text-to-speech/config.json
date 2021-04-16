@@ -1,10 +1,10 @@
 {
-    "speechKey":"06eb9311f8c94b088627778387860715",
-    "speechLocation":"uksouth",
-    "visionKey":"c2e3672301714be7b824be3d86f87e95",
-    "visionUrl":"stretch-vision.cognitiveservices.azure.com",
-    "blobstore":"stretchblob",
-    "blobKey":"4L6IgAizF1FG0bO8sZXxm0GeDmj/Wd0UaYpoHSnwkQZJlcBv0LagzxHb0MQMuJGu6Q5rur56Pw/xVZQanKfjQA==",
-    "blobContainer":"imagetest",
-    "blobConnection":"DefaultEndpointsProtocol=https;AccountName=stretchblob;AccountKey=4L6IgAizF1FG0bO8sZXxm0GeDmj/Wd0UaYpoHSnwkQZJlcBv0LagzxHb0MQMuJGu6Q5rur56Pw/xVZQanKfjQA==;EndpointSuffix=core.windows.net"
+    "speechKey":"",
+    "speechLocation":"",
+    "visionKey":"",
+    "visionUrl":"",
+    "blobstore":"",
+    "blobKey":"",
+    "blobContainer":"",
+    "blobConnection":""
 }

@@ -7,6 +7,7 @@ from azure.cognitiveservices.speech import (
 from azure.cognitiveservices.speech.audio import AudioOutputConfig
 
 from datetime import datetime, timedelta
+import requests
 from azure.storage.blob import (
     BlobClient,
     BlobServiceClient,
@@ -105,13 +106,13 @@ def speak(text):
     synthesizer.speak_text_async(text)
 
 
-def recognize(imgUrl):
+def recognize(blobData):
 
     key, url = getVisionKeys()
 
     headers = {
         # Request headers
-        "Content-Type": "application/json",
+        "Content-Type": "application/octet-stream",
         "Ocp-Apim-Subscription-Key": key,
     }
 
@@ -123,7 +124,7 @@ def recognize(imgUrl):
         }
     )
 
-    body = '{"url": "' + imgUrl + '"}'
+    body = blobData
 
     try:
         conn = http.client.HTTPSConnection(url)
@@ -150,10 +151,10 @@ def uploadBlob(blobBytes):
     blob.upload_blob(blobBytes)
 
 
-result = recognize("https://robots.ieee.org/robots/stretch/stretch-1200x630.jpg")
+pic_url = "https://robots.ieee.org/robots/stretch/stretch-1200x630.jpg"
+data = requests.get(pic_url)  # read image
+photo = data.content
 
-speak("I can see" + str(result["description"]["captions"][0]["text"]))
-
-result = recognize(blobSas("pythontest"))
+result = recognize(photo)
 
 speak("I can see" + str(result["description"]["captions"][0]["text"]))

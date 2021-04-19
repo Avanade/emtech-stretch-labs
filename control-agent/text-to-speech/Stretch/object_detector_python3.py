@@ -43,6 +43,19 @@ def getSpeechKeys():
     return key, region
 
 
+def getVisionKeys():
+    __location__ = os.path.realpath(
+        os.path.join(os.getcwd(), os.path.dirname(__file__))
+    )
+
+    with open(os.path.join(__location__, "config.json")) as json_file:
+        data = json.load(json_file)
+        key = data["visionKey"]
+        url = data["visionUrl"]
+
+    return key, url
+
+
 def speak(text):
     key, region = getSpeechKeys()
     # speech_config = SpeechConfig(subscription=key, region=region)
@@ -153,6 +166,10 @@ class ObjectDetector:
     def apply_to_image(self, rgb_image, draw_output=False):
 
         uploadBlob(rgb_image)
+        azuresees = recognize(rgb_image)
+
+        print("Azure can see" + str(azuresees["description"]["captions"][0]["text"]))
+        speak("Azure can see" + str(azuresees["description"]["captions"][0]["text"]))
 
         original_height, original_width, num_color = rgb_image.shape
 

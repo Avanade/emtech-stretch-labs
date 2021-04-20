@@ -2,5 +2,9 @@
     "speechKey":"",
     "speechLocation":"",
     "visionKey":"",
-    "visionUrl":""
+    "visionUrl":"",
+    "blobstore":"",
+    "blobKey":"",
+    "blobContainer":"",
+    "blobConnection":""
 }

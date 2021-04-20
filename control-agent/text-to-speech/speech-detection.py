@@ -34,12 +34,11 @@ def from_mic():
     audio_config = speechsdk.AudioConfig(device_name=getMicUID())
 
     speech_config = speechsdk.SpeechConfig(subscription=key, region=region)
-    speech_recognizer = speechsdk.SpeechRecognizer(
-        speech_config=speech_config, audio_config=audio_config
-    )
+    speech_recognizer = speechsdk.SpeechRecognizer(speech_config=speech_config)
 
     print("Speak into your microphone.")
     result = speech_recognizer.recognize_once_async().get()
+    print(result)
     print(result.text)
 
 

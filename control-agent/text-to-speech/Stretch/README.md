@@ -31,3 +31,15 @@ The expected behaviour is to drive the robot head manually using the terminal in
 Azure Speech detection is used to run speech to text for use in commands, or on-board chatbots. To use, the unique device Id of a microphone is needed. This can be found [here](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/how-to-select-audio-input-devices)
 
 For Linux devices like the stretch robot, additional installation prerequisties are required. details of these can be found [here](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/quickstarts/setup-platform?tabs=dotnet%2Cmacos%2Cjre%2Cbrowser&pivots=programming-language-python)
+
+`N.B. Visual studio may not ask for the correct microphone permissions, and no result will be returned`
+
+The default microphone should be selected automatically. If no result is seen, try running the script from a terminal instance, and granting permission.
+
+You can also start visual studio code with:
+
+```
+sudo /Applications/Visual\ Studio\ Code.app/Contents/MacOS/Electron
+```
+
+until the bug is corrected in VS Code.

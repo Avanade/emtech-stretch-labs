@@ -1,0 +1,11 @@
+{
+    "speechKey":"",
+    "speechLocation":"",
+    "visionKey":"",
+    "visionUrl":"",
+    "blobstore":"",
+    "blobKey":"",
+    "blobContainer":"",
+    "blobConnection":"",
+    "micDeviceUID":""
+}

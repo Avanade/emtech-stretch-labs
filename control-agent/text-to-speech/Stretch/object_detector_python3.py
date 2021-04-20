@@ -35,10 +35,7 @@ def getSpeechKeys():
 
 def speak(text):
     key, region = getSpeechKeys()
-    # speech_config = SpeechConfig(subscription=key, region=region)
-    speech_config = SpeechConfig(
-        subscription="06eb9311f8c94b088627778387860715", region="uksouth"
-    )
+    speech_config = SpeechConfig(subscription=key, region=region)
     speech_config.speech_synthesis_voice_name = "en-GB-RyanNeural"
     audio_config = AudioOutputConfig(use_default_speaker=True)
     synthesizer = SpeechSynthesizer(

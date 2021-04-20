@@ -6,6 +6,5 @@
     "blobstore":"",
     "blobKey":"",
     "blobContainer":"",
-    "blobConnection":"",
-    "micDeviceUID":""
+    "blobConnection":""
 }

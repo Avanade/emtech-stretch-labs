@@ -5,7 +5,7 @@ Because of that, you could install and setup every widget and configuration, but
 
 ## Related Docs
 - **[How to contribute](https://github.com/Avanade/emtech-stretch-labs/tree/main/CONTRIBUTING.md)**
-- **[Our code of conduct](https://github.com/Avanade/emtech-stretch-labs/tree/main/CODE_OF_CONDUCT.MD)**
+- **[Our code of conduct](https://github.com/Avanade/emtech-stretch-labs/tree/main/CODE_OF_CONDUCT.md)**
 - [Folder Structure and package requirements](structure.md)
 - [How to set up the Rocos Platform](rocos-setup.md)
 - [How to test locally](local-testing.md)

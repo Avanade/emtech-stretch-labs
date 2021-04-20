@@ -12,7 +12,7 @@ By contributing to this project, you:
 - Agree that, if you did not author 100% of the content, the appropriate licenses and copyrights have been added along with any other necessary attribution.
 
 ## Code of Conduct
-This project, and people participating in it, are governed by our [code of conduct](CODE_OF_CONDUCT.MD). By taking part, we expect you to try your best to uphold this code of conduct. If you have concerns about unacceptable behaviour, please contact one of the project maintainers - right now, either [Chris](https://twitter.com/sealjay_clj) or [Fergus](https://twitter.com/FergusKidd).
+This project, and people participating in it, are governed by our [code of conduct](CODE_OF_CONDUCT.md). By taking part, we expect you to try your best to uphold this code of conduct. If you have concerns about unacceptable behaviour, please contact one of the project maintainers - right now, either [Chris](https://twitter.com/sealjay_clj) or [Fergus](https://twitter.com/FergusKidd).
 
 ## What should I know before I get started?
 ### Workflow

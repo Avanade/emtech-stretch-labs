@@ -88,15 +88,20 @@ def recognize_intent():
                     intent_result.cancellation_details.error_details
                 )
             )
+    return intent_result
 
 
 run = True
 
-recognize_intent()
+while run == True:
 
-# while run == True:
-#    text = from_mic()
-#
-#        speech.speak(str(text))
-#    if "hello rory" in text.lower():
-#        recognize_intent()
+    intent = recognize_intent()
+    speech.speak(intent.text)
+
+    if intent.intent_id == "Vision":
+        speech.speak("I'm looking")
+        result = speech.recognize(
+            "https://robots.ieee.org/robots/stretch/stretch-1200x630.jpg"
+        )
+
+        speech.speak("I can see" + str(result["description"]["captions"][0]["text"]))

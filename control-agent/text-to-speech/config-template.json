@@ -8,5 +8,8 @@
     "blobContainer":"",
     "blobConnection":"",
     "LuisKey":"",
-    "LuisRegion":""
+    "LuisRegion":"",
+    "qnaURL":"",
+    "qnaKey":""
+
 }

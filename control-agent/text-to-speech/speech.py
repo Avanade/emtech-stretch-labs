@@ -82,6 +82,7 @@ def recognize(imgUrl):
     return json.loads(data)
 
 
-result = recognize("https://robots.ieee.org/robots/stretch/stretch-1200x630.jpg")
+# Tests
+# result = recognize("https://robots.ieee.org/robots/stretch/stretch-1200x630.jpg")
 
-speak("I can see" + str(result["description"]["captions"][0]["text"]))
+# speak("I can see" + str(result["description"]["captions"][0]["text"]))

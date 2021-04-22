@@ -6,5 +6,7 @@
     "blobstore":"",
     "blobKey":"",
     "blobContainer":"",
-    "blobConnection":""
+    "blobConnection":"",
+    "LuisKey":"",
+    "LuisRegion":""
 }

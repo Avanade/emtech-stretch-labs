@@ -2,6 +2,7 @@ import azure.cognitiveservices.speech as speechsdk
 import os
 import json
 import requests
+from datetime import datetime
 
 import speech
 
@@ -156,7 +157,16 @@ while run == True:
 
         elif intent.intent_id == "Weather.QueryWeather":
             speech.speak("I don't have the capacity for thermoregulation")
+        elif intent.intent_id == "Time":
+
+            now = datetime.now()
+            speakabletime = now.strftime("%H:%M")
+            speech.speak("The time is, " + speakabletime)
+        elif intent.intent_id == "Stop":
+            exit
 
     except:
         if intent != "No good match found in KB.":
             speech.speak(intent)
+        else:
+            speech.speak("I'm not sure I understood that")

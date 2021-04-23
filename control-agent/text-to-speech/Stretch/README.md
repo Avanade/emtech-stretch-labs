@@ -43,3 +43,19 @@ sudo /Applications/Visual\ Studio\ Code.app/Contents/MacOS/Electron
 ```
 
 until the bug is corrected in VS Code.
+
+# LUIS Integration
+
+The following are the required intents for current code functionality:
+
+| Intent                         | Entities                      | Example                          | Current Action                                  |
+| ------------------------------ | ----------------------------- | -------------------------------- | ----------------------------------------------- |
+| Move                           | Forwards,Backwards,Left,Right | "Move Forwards"                  | Dictates intent to move (currently no movement) |
+| Vision                         | N/A                           | "What can you see?"              | Call the vision service and dictate the caption |
+| (prebuilt)Weather.QueryWeather | N/A                           | "What's the weather like today?" | Simple retort                                   |
+| Stop                           | N/A                           | "STOP!"                          | Exit code and stop running                      |
+| Time                           | N/A                           | "What time is it?"               | Dictates the current system time                |
+
+# QnA integration
+
+Any QnA structure can be used, and customisations can be added. The default 'witty' QnA additions are recomended to quickly exapand the KB with simple answers to common questions

@@ -36,6 +36,7 @@ module.exports = {
     { name: "next-mind" },
     { name: "unity" },
     { name: "rocos" },
+    { name: "stretch-re3" },
   ],
 
   allowTicketNumber: false,

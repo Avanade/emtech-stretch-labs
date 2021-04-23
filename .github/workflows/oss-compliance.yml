@@ -10,6 +10,7 @@ on:
       - "docs/**"
       - "nextmind-robot-telepresence/Library/PackageCache/**"
       - "nextmind-robot-telepresence/Library/ScriptAssemblies/**"
+      - "README.md"
 jobs:
   scanleft:
     runs-on: ubuntu-latest

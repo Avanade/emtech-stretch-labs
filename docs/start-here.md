@@ -1,9 +1,11 @@
 # Documentation Overview
-As in the main readme, this repository is intended to test out integrations with our current research topics, from human-robot integration, intelligent edge computing, through to 5G and fleet control of robotics.
+As in [the main readme](https://github.com/Avanade/emtech-stretch-labs/tree/main/README.md), this repository is intended to test out integrations with our current research topics, from human-robot integration, intelligent edge computing, through to 5G and fleet control of robotics.
 
 Because of that, you could install and setup every widget and configuration, but you are unlikely to need every single widget installed at once.
 
 ## Related Docs
+- **[How to contribute](https://github.com/Avanade/emtech-stretch-labs/tree/main/CONTRIBUTING.md)**
+- **[Our code of conduct](https://github.com/Avanade/emtech-stretch-labs/tree/main/CODE_OF_CONDUCT.md)**
 - [Folder Structure and package requirements](structure.md)
 - [How to set up the Rocos Platform](rocos-setup.md)
 - [How to test locally](local-testing.md)

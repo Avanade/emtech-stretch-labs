@@ -404,6 +404,7 @@ InitTestScene*.unity
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+.vscode/settings.json
 *.code-workspace
 
 ### VisualStudioCode Patch ###
@@ -796,3 +797,5 @@ FodyWeavers.xsd
 cloud-app/teletubby.proto
 docs/diagrams-as-code/unity-69-logo-png-transparent.png
 docs/diagrams-as-code/grpc-logo.png
+config.json
+

@@ -163,7 +163,7 @@ while run == True:
             speakabletime = now.strftime("%H:%M")
             speech.speak("The time is, " + speakabletime)
         elif intent.intent_id == "Stop":
-            exit
+            break
 
     except:
         if intent != "No good match found in KB.":

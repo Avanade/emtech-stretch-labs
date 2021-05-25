@@ -149,10 +149,6 @@ def recognize(blobData):
     return json.loads(data)
 
 
-<<<<<<< HEAD
-# Tests
-# result = recognize("https://robots.ieee.org/robots/stretch/stretch-1200x630.jpg")
-=======
 def uploadBlob(blobBytes):
     """upload a blob to the Azure storage account named as a timestamp
     Keyword arguments:
@@ -161,9 +157,7 @@ def uploadBlob(blobBytes):
     name = datetime.now().strftime("%d/%m/%Y-%H:%M:%S")
     conn, container, name, key = getBlobKeys()
     blob = BlobClient.from_connection_string(
-        conn_str=conn,
-        container_name=container,
-        blob_name=name,
+        conn_str=conn, container_name=container, blob_name=name,
     )
 
     blob.upload_blob(blobBytes)
@@ -175,6 +169,5 @@ data = requests.get(pic_url)  # read image
 photo = data.content
 
 result = recognize(photo)
->>>>>>> main
 
 # speak("I can see" + str(result["description"]["captions"][0]["text"]))

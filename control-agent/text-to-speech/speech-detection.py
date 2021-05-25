@@ -152,6 +152,8 @@ while run == True:
             try:
                 direction = intentJson["entities"][0]["entity"]
                 speech.speak("I'm going to move " + str(direction))
+                if direction == 'forward':
+                    os.system('python /home/hello-robot/Chatbot/moveforward.py')
             except:
                 speech.speak("I don't know what direction to move")
 

@@ -145,6 +145,7 @@ def recognize(blobData):
         conn.close()
     except Exception as e:
         print("Vision Error: ", e)
+        return 'error'
 
     return json.loads(data)
 
@@ -157,17 +158,18 @@ def uploadBlob(blobBytes):
     name = datetime.now().strftime("%d/%m/%Y-%H:%M:%S")
     conn, container, name, key = getBlobKeys()
     blob = BlobClient.from_connection_string(
-        conn_str=conn, container_name=container, blob_name=name,
+        conn_str=conn,
+        container_name=container,
+        blob_name=name,
     )
 
     blob.upload_blob(blobBytes)
-
 
 # Example usage
 pic_url = "https://robots.ieee.org/robots/stretch/stretch-1200x630.jpg"
 data = requests.get(pic_url)  # read image
 photo = data.content
 
-result = recognize(photo)
 
-# speak("I can see" + str(result["description"]["captions"][0]["text"]))
+
+#speak("I can see" + str(result["description"]["captions"][0]["text"]))

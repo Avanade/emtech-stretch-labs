@@ -203,6 +203,55 @@ def recognize_face(blobData):
     return json.loads(data)
 
 
+def identify_face(face_id):
+
+    key, url = getFaceKeys()
+
+    headers = {
+        # Request headers`
+        "Content-Type": "application/json",
+        "Ocp-Apim-Subscription-Key": key,
+    }
+
+    params = urllib.parse.urlencode(
+        {
+            # Request parameters
+            "detectionModel": "detection_03",
+            "returnFaceId": "true",
+            "returnFaceLandmarks": "false",
+        }
+    )
+
+    body = {
+        "PersonGroupId": "53cdefb1-c211-4215-a944-6b64128fa39f",
+        "faceIds": [str(face_id)],
+        "maxNumOfCandidatesReturned": 1,
+        "confidenceThreshold": 0.5,
+    }
+
+    try:
+        conn = http.client.HTTPSConnection(url)
+        conn.request("POST", "/face/v1.0/identify?%s" % params, str(body), headers)
+        response = conn.getresponse()
+        data = response.read()
+        print(data)
+        conn.close()
+    except Exception as e:
+        print("Vision Error: ", e)
+        return "error"
+
+    # face logic
+    # TODO remove hard coding
+    results = json.loads(data)
+    if (
+        results[0]["candidates"][0]["personId"]
+        == "f9611b03-dc30-48bd-88f5-9ce251f688b6"
+    ):
+        return "Fergus"
+
+    return "a stranger"
+
+
 def uploadBlob(blobBytes):
     """upload a blob to the Azure storage account named as a timestamp
     Keyword arguments:
@@ -217,15 +266,3 @@ def uploadBlob(blobBytes):
     )
 
     blob.upload_blob(blobBytes)
-
-
-# Example usage
-pic_url = "https://www.avanade.com/-/media/images/blogs/avanade-insights/fergus-kidd.jpg?la=en&ver=2&w=320&hash=F569D95D7FE880DCA27F7AEA4558EDF4"
-data = requests.get(pic_url)  # read image
-photo = data.content
-
-print("results:")
-print(recognize_face(photo)[0]["faceId"])
-
-
-# speak("I can see" + str(result["description"]["captions"][0]["text"]))

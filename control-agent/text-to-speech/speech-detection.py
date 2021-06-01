@@ -198,7 +198,9 @@ while run == True:
             image = realsense.take_photo()
             speech.speak("click")
             speech.uploadBlob(image)
-            speech.speak("I've saved that to Azure for you")
+            speech.speak(
+                "I've saved that to Azure for you, check it out in my blob storage"
+            )
 
         elif intent.intent_id == "Arm":
             up_down = ""

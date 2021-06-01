@@ -14,6 +14,7 @@ def __location__():
     )
     return __location__
 
+
 def getSpeechKeys():
 
     with open(os.path.join(__location__(), "config.json")) as json_file:
@@ -132,7 +133,7 @@ def QnA(question):
 
 run = True
 
-speech.speak('starting up')
+speech.speak("starting up")
 
 while run == True:
 
@@ -141,12 +142,24 @@ while run == True:
         if intent.intent_id == "Vision":
             speech.speak("I'm looking")
 
-            image=realsense.take_photo()         
+            image = realsense.take_photo()
 
             result = speech.recognize(image)
-            speech.speak(
-                "I can see" + str(result["description"]["captions"][0]["text"])
-            )
+
+            if "person" in result:
+                # TODO more than one person?
+                person = speech.recognize_face(image)[0]["faceId"]
+                speech.speak(
+                    "I can see"
+                    + str(result["description"]["captions"][0]["text"]).replace(
+                        "a person", str(person)
+                    )
+                )
+
+            else:
+                speech.speak(
+                    "I can see" + str(result["description"]["captions"][0]["text"])
+                )
 
         elif intent.intent_id == "Move":
 
@@ -154,14 +167,18 @@ while run == True:
             try:
                 direction = intentJson["entities"][0]["entity"]
                 speech.speak("I'm going to move " + str(direction))
-                if direction == 'forward':
-                    os.system('python /home/hello-robot/Chatbot/moveFB.py \'forward\' 0.3')
-                elif direction == 'back':
-                    os.system('python /home/hello-robot/Chatbot/moveFB.py \'backwards\' 0.3')
-                elif direction =='left':
-                    os.system('python /home/hello-robot/Chatbot/moveLR.py \'left\' 0.3')
-                elif direction =='right':
-                    os.system('python /home/hello-robot/Chatbot/moveLR.py \'right\' 0.3')
+                if direction == "forward":
+                    os.system(
+                        "python /home/hello-robot/Chatbot/moveFB.py 'forward' 0.3"
+                    )
+                elif direction == "back":
+                    os.system(
+                        "python /home/hello-robot/Chatbot/moveFB.py 'backwards' 0.3"
+                    )
+                elif direction == "left":
+                    os.system("python /home/hello-robot/Chatbot/moveLR.py 'left' 0.3")
+                elif direction == "right":
+                    os.system("python /home/hello-robot/Chatbot/moveLR.py 'right' 0.3")
 
             except:
                 speech.speak("I don't know what direction to move")
@@ -173,40 +190,52 @@ while run == True:
             now = datetime.now()
             speakabletime = now.strftime("%H:%M")
             speech.speak("The time is, " + speakabletime)
-		
+
         elif intent.intent_id == "Stop":
             break
+        elif intent.intent_id == "Selfie":
+            speech.speak("Smile. 3, 2, 1.")
+            image = realsense.take_photo()
+            speech.speak("click")
+            speech.uploadBlob(image)
+            speech.speak("I've saved that to Azure for you")
+
         elif intent.intent_id == "Arm":
-            up_down=''
-            in_out=''
+            up_down = ""
+            in_out = ""
 
             intentJson = json.loads(intent.intent_json)
 
             if "'up'" in str(intentJson):
-                up_down = 'up'
+                up_down = "up"
             elif "'down'" in str(intentJson):
-                up_down = 'down'
+                up_down = "down"
             if "'in'" in str(intentJson):
-                in_out = 'in'
+                in_out = "in"
             elif "'out'" in str(intentJson):
-                in_out = 'out'
-      
-            os.system('python /home/hello-robot/Chatbot/movearm.py \''+up_down+'\' 1 \''+in_out +'\' 1')
+                in_out = "out"
+
+            os.system(
+                "python /home/hello-robot/Chatbot/movearm.py '"
+                + up_down
+                + "' 1 '"
+                + in_out
+                + "' 1"
+            )
 
         elif intent.intent_id == "Grip":
             intentJson = json.loads(intent.intent_json)
             if "'open'" in str(intentJson):
-                os.system('python /home/hello-robot/Chatbot/moveGrip.py \'open\' 100')
+                os.system("python /home/hello-robot/Chatbot/moveGrip.py 'open' 100")
             elif "'close'" in str(intentJson):
-                os.system('python /home/hello-robot/Chatbot/moveGrip.py \'close\' 20')
+                os.system("python /home/hello-robot/Chatbot/moveGrip.py 'close' 20")
             else:
-                speech.speak('open or close it?')
+                speech.speak("open or close it?")
 
         elif intent.intent_id == "Calibrate":
-            speech.speak('calibrating, stand back')
-            os.system('stretch_robot_home.py')
-            speech.speak('calibration complete, I can now use my limbs')
-
+            speech.speak("calibrating, stand back")
+            os.system("stretch_robot_home.py")
+            speech.speak("calibration complete, I can now use my limbs")
 
     except:
         if intent != "No good match found in KB.":

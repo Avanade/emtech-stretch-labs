@@ -24,7 +24,7 @@ import os
 
 
 def getSpeechKeys():
-    """ Retrieve Keys for Azure Speech """
+    """Retrieve Keys for Azure Speech"""
     __location__ = os.path.realpath(
         os.path.join(os.getcwd(), os.path.dirname(__file__))
     )
@@ -38,7 +38,7 @@ def getSpeechKeys():
 
 
 def getVisionKeys():
-    """ Retrieve Keys for Azure Vision """
+    """Retrieve Keys for Azure Vision"""
     __location__ = os.path.realpath(
         os.path.join(os.getcwd(), os.path.dirname(__file__))
     )
@@ -51,8 +51,22 @@ def getVisionKeys():
     return key, url
 
 
+def getFaceKeys():
+    """Retrieve Keys for Azure Vision - Face"""
+    __location__ = os.path.realpath(
+        os.path.join(os.getcwd(), os.path.dirname(__file__))
+    )
+
+    with open(os.path.join(__location__, "config.json")) as json_file:
+        data = json.load(json_file)
+        key = data["FaceKey"]
+        url = data["FaceUrl"]
+
+    return key, url
+
+
 def getBlobKeys():
-    """ Retrieve Keys for Azure Blob Storage """
+    """Retrieve Keys for Azure Blob Storage"""
     __location__ = os.path.realpath(
         os.path.join(os.getcwd(), os.path.dirname(__file__))
     )
@@ -145,7 +159,46 @@ def recognize(blobData):
         conn.close()
     except Exception as e:
         print("Vision Error: ", e)
-        return 'error'
+        return "error"
+
+    return json.loads(data)
+
+
+def recognize_face(blobData):
+    """Use Azure computer vision recognize from an image as bytes
+    Keyword arguments:
+    blobData -- bytes data of an image
+    """
+
+    key, url = getFaceKeys()
+
+    headers = {
+        # Request headers
+        "Content-Type": "application/octet-stream",
+        "Ocp-Apim-Subscription-Key": key,
+    }
+
+    params = urllib.parse.urlencode(
+        {
+            # Request parameters
+            "detectionModel": "detection_03",
+            "returnFaceId": "true",
+            "returnFaceLandmarks": "false",
+        }
+    )
+
+    body = blobData
+
+    try:
+        conn = http.client.HTTPSConnection(url)
+        conn.request("POST", "/face/v1.0/detect?%s" % params, body, headers)
+        response = conn.getresponse()
+        data = response.read()
+        print(data)
+        conn.close()
+    except Exception as e:
+        print("Vision Error: ", e)
+        return "error"
 
     return json.loads(data)
 
@@ -165,11 +218,14 @@ def uploadBlob(blobBytes):
 
     blob.upload_blob(blobBytes)
 
+
 # Example usage
-pic_url = "https://robots.ieee.org/robots/stretch/stretch-1200x630.jpg"
+pic_url = "https://www.avanade.com/-/media/images/blogs/avanade-insights/fergus-kidd.jpg?la=en&ver=2&w=320&hash=F569D95D7FE880DCA27F7AEA4558EDF4"
 data = requests.get(pic_url)  # read image
 photo = data.content
 
+print("results:")
+print(recognize_face(photo)[0]["faceId"])
 
 
-#speak("I can see" + str(result["description"]["captions"][0]["text"]))
+# speak("I can see" + str(result["description"]["captions"][0]["text"]))

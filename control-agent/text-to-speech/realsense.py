@@ -1,4 +1,3 @@
-import pyrealsense2 as rs
 import numpy as np
 import time
 import math
@@ -7,6 +6,7 @@ from PIL import Image
 import io
 
 import speech
+
 
 def take_photo():
     pipeline = rs.pipeline()
@@ -22,9 +22,9 @@ def take_photo():
 
     # We will be removing the background of objects more than
     #  clipping_distance_in_meters meters away
-    clipping_distance_in_meters = 1.5 
-    
-    time.sleep(2)#or the picture will look green
+    clipping_distance_in_meters = 1.5
+
+    time.sleep(2)  # or the picture will look green
 
     align_to = rs.stream.color
     align = rs.align(align_to)
@@ -35,16 +35,14 @@ def take_photo():
     color_frame = aligned_frames.get_color_frame()
 
     color_image = np.asanyarray(color_frame.get_data())
-    r_color_image = np.rot90(color_image,3)
+    r_color_image = np.rot90(color_image, 3)
 
-    bimg = Image.fromarray(r_color_image,'RGB')
-    b,g,r = bimg.split()
-    img = Image.merge("RGB",(r,g,b))
-    img.save('test.png')
+    bimg = Image.fromarray(r_color_image, "RGB")
+    b, g, r = bimg.split()
+    img = Image.merge("RGB", (r, g, b))
+    img.save("test.png")
 
     img_byte = io.BytesIO()
-    img.save(img_byte,format='PNG')
+    img.save(img_byte, format="PNG")
 
-    return(img_byte.getvalue())
-
-
+    return img_byte.getvalue()

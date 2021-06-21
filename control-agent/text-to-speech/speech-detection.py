@@ -81,7 +81,7 @@ def recognize_intent():
         return ""
     print(intentJson)
     # if low score, do QnA
-    if intentJson["topScoringIntent"]["score"] < 0.9:
+    if intentJson["topScoringIntent"]["score"] < 0.7:
         qna = json.loads(QnA(intent_result.text))
         return qna["answers"][0]["answer"]
 
@@ -146,14 +146,26 @@ while run == True:
 
             result = speech.recognize(image)
 
-            if "person" in result:
+            if (
+                "person"
+                or "boy"
+                or "man"
+                or "woman" in result["description"]["captions"][0]["text"]
+            ):
                 # TODO more than one person?
-                person = speech.recognize_face(image)[0]["faceId"]
+                try:
+                    person = speech.identify_face(
+                        speech.recognize_face(image)[0]["faceId"]
+                    )
+                except:
+                    person = "someone I don't recognise"
+
                 speech.speak(
                     "I can see"
-                    + str(result["description"]["captions"][0]["text"]).replace(
-                        "a person", str(person)
-                    )
+                    + str(result["description"]["captions"][0]["text"])
+                    .replace("a person", str(person))
+                    .replace("a man", str(person))
+                    .replace("a boy", str(person))
                 )
 
             else:
@@ -164,21 +176,38 @@ while run == True:
         elif intent.intent_id == "Move":
 
             intentJson = json.loads(intent.intent_json)
+            amount = 0.5
+
+            for entity in intentJson["entities"]:
+                print(entity)
+                if entity["type"] == "Direction":
+                    print("direction found")
+                    direction = str(entity["entity"])
+                elif entity["type"] == "builtin.number":
+                    amount = str(entity["resolution"]["value"])
+
             try:
-                direction = intentJson["entities"][0]["entity"]
-                speech.speak("I'm going to move " + str(direction))
+                speech.speak("I'm going to move " + str(direction) + str(amount))
                 if direction == "forward":
                     os.system(
-                        "python /home/hello-robot/Chatbot/moveFB.py 'forward' 0.3"
+                        "python /home/hello-robot/Chatbot/moveFB.py 'forward' "
+                        + str(amount)
                     )
                 elif direction == "back":
                     os.system(
-                        "python /home/hello-robot/Chatbot/moveFB.py 'backwards' 0.3"
+                        "python /home/hello-robot/Chatbot/moveFB.py 'backwards' "
+                        + str(amount)
                     )
                 elif direction == "left":
-                    os.system("python /home/hello-robot/Chatbot/moveLR.py 'left' 0.3")
+                    os.system(
+                        "python /home/hello-robot/Chatbot/moveLR.py 'left' "
+                        + str(amount)
+                    )
                 elif direction == "right":
-                    os.system("python /home/hello-robot/Chatbot/moveLR.py 'right' 0.3")
+                    os.system(
+                        "python /home/hello-robot/Chatbot/moveLR.py 'right' "
+                        + str(amount)
+                    )
 
             except:
                 speech.speak("I don't know what direction to move")
@@ -233,6 +262,21 @@ while run == True:
                 os.system("python /home/hello-robot/Chatbot/moveGrip.py 'close' 20")
             else:
                 speech.speak("open or close it?")
+
+        elif intent.intent_id == "Wrist":
+            intentJson = json.loads(intent.intent_json)
+
+            try:
+                for entity in intentJson["entities"]:
+                    if entity["type"] == "builtin.number":
+                        amount = str(entity["resolution"]["value"])
+
+                os.system(
+                    "python /home/hello-robot/Chatbot/moveWrist.py " + str(amount)
+                )
+
+            except:
+                speech.speak("Move it where?")
 
         elif intent.intent_id == "Calibrate":
             speech.speak("calibrating, stand back")

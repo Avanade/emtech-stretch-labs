@@ -10,6 +10,8 @@
     "LuisKey":"",
     "LuisRegion":"",
     "qnaURL":"",
-    "qnaKey":""
+    "qnaKey":"",
+    "FaceKey":"",
+    "FaceUrl":""
 
 }

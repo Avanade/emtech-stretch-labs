@@ -178,9 +178,8 @@ def recognize_face(blobData):
         "Ocp-Apim-Subscription-Key": key,
     }
 
-    params = urllib.parse.urlencode(
+    request_params = urllib.parse.urlencode(
         {
-            # Request parameters
             "detectionModel": "detection_03",
             "returnFaceId": "true",
             "returnFaceLandmarks": "false",
@@ -243,10 +242,8 @@ def identify_face(face_id):
     # face logic
     # TODO remove hard coding
     results = json.loads(data)
-    if (
-        results[0]["candidates"][0]["personId"]
-        == "f9611b03-dc30-48bd-88f5-9ce251f688b6"
-    ):
+    _face_ids = {"fergus": "f9611b03-dc30-48bd-88f5-9ce251f688b6"}
+    if results[0]["candidates"][0]["personId"] == _face_ids["fergus"]:
         return "Fergus"
 
     return "a stranger"

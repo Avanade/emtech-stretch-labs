@@ -1,12 +1,9 @@
-import pyrealsense2 as rs
+import io
 import numpy as np
 import time
-import math
 
 from PIL import Image
-import io
-
-import speech
+import pyrealsense2 as rs
 
 
 def take_photo():

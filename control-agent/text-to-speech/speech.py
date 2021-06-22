@@ -24,7 +24,7 @@ import os
 
 
 def getSpeechKeys():
-    """ Retrieve Keys for Azure Speech """
+    """Retrieve Keys for Azure Speech"""
     __location__ = os.path.realpath(
         os.path.join(os.getcwd(), os.path.dirname(__file__))
     )
@@ -38,7 +38,7 @@ def getSpeechKeys():
 
 
 def getVisionKeys():
-    """ Retrieve Keys for Azure Vision """
+    """Retrieve Keys for Azure Vision"""
     __location__ = os.path.realpath(
         os.path.join(os.getcwd(), os.path.dirname(__file__))
     )
@@ -51,8 +51,22 @@ def getVisionKeys():
     return key, url
 
 
+def getFaceKeys():
+    """Retrieve Keys for Azure Vision - Face"""
+    __location__ = os.path.realpath(
+        os.path.join(os.getcwd(), os.path.dirname(__file__))
+    )
+
+    with open(os.path.join(__location__, "config.json")) as json_file:
+        data = json.load(json_file)
+        key = data["FaceKey"]
+        url = data["FaceUrl"]
+
+    return key, url
+
+
 def getBlobKeys():
-    """ Retrieve Keys for Azure Blob Storage """
+    """Retrieve Keys for Azure Blob Storage"""
     __location__ = os.path.realpath(
         os.path.join(os.getcwd(), os.path.dirname(__file__))
     )
@@ -145,14 +159,96 @@ def recognize(blobData):
         conn.close()
     except Exception as e:
         print("Vision Error: ", e)
+        return "error"
 
     return json.loads(data)
 
 
-<<<<<<< HEAD
-# Tests
-# result = recognize("https://robots.ieee.org/robots/stretch/stretch-1200x630.jpg")
-=======
+def recognize_face(blobData):
+    """Use Azure computer vision recognize from an image as bytes
+    Keyword arguments:
+    blobData -- bytes data of an image
+    """
+
+    key, url = getFaceKeys()
+
+    headers = {
+        # Request headers
+        "Content-Type": "application/octet-stream",
+        "Ocp-Apim-Subscription-Key": key,
+    }
+
+    request_params = urllib.parse.urlencode(
+        {
+            "detectionModel": "detection_03",
+            "returnFaceId": "true",
+            "returnFaceLandmarks": "false",
+        }
+    )
+
+    body = blobData
+
+    try:
+        conn = http.client.HTTPSConnection(url)
+        conn.request("POST", "/face/v1.0/detect?%s" % params, body, headers)
+        response = conn.getresponse()
+        data = response.read()
+        print(data)
+        conn.close()
+    except Exception as e:
+        print("Vision Error: ", e)
+        return "error"
+
+    return json.loads(data)
+
+
+def identify_face(face_id):
+
+    key, url = getFaceKeys()
+
+    headers = {
+        # Request headers`
+        "Content-Type": "application/json",
+        "Ocp-Apim-Subscription-Key": key,
+    }
+
+    params = urllib.parse.urlencode(
+        {
+            # Request parameters
+            "detectionModel": "detection_03",
+            "returnFaceId": "true",
+            "returnFaceLandmarks": "false",
+        }
+    )
+
+    body = {
+        "PersonGroupId": "53cdefb1-c211-4215-a944-6b64128fa39f",
+        "faceIds": [str(face_id)],
+        "maxNumOfCandidatesReturned": 1,
+        "confidenceThreshold": 0.5,
+    }
+
+    try:
+        conn = http.client.HTTPSConnection(url)
+        conn.request("POST", "/face/v1.0/identify?%s" % params, str(body), headers)
+        response = conn.getresponse()
+        data = response.read()
+        print(data)
+        conn.close()
+    except Exception as e:
+        print("Vision Error: ", e)
+        return "error"
+
+    # face logic
+    # TODO remove hard coding
+    results = json.loads(data)
+    _face_ids = {"fergus": "f9611b03-dc30-48bd-88f5-9ce251f688b6"}
+    if results[0]["candidates"][0]["personId"] == _face_ids["fergus"]:
+        return "Fergus"
+
+    return "a stranger"
+
+
 def uploadBlob(blobBytes):
     """upload a blob to the Azure storage account named as a timestamp
     Keyword arguments:
@@ -167,14 +263,3 @@ def uploadBlob(blobBytes):
     )
 
     blob.upload_blob(blobBytes)
-
-
-# Example usage
-pic_url = "https://robots.ieee.org/robots/stretch/stretch-1200x630.jpg"
-data = requests.get(pic_url)  # read image
-photo = data.content
-
-result = recognize(photo)
->>>>>>> main
-
-# speak("I can see" + str(result["description"]["captions"][0]["text"]))

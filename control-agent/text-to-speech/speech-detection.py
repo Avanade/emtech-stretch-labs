@@ -5,6 +5,7 @@ import requests
 from datetime import datetime
 
 import speech
+import realsense
 
 
 def __location__():
@@ -80,7 +81,7 @@ def recognize_intent():
         return ""
     print(intentJson)
     # if low score, do QnA
-    if intentJson["topScoringIntent"]["score"] < 0.9:
+    if intentJson["topScoringIntent"]["score"] < 0.7:
         qna = json.loads(QnA(intent_result.text))
         return qna["answers"][0]["answer"]
 
@@ -132,26 +133,82 @@ def QnA(question):
 
 run = True
 
+speech.speak("starting up")
+
 while run == True:
 
     intent = recognize_intent()
     try:
         if intent.intent_id == "Vision":
             speech.speak("I'm looking")
-            result = speech.recognize(
-                "https://robots.ieee.org/robots/stretch/stretch-1200x630.jpg"
-            )
 
-            speech.speak(
-                "I can see" + str(result["description"]["captions"][0]["text"])
-            )
+            image = realsense.take_photo()
+
+            result = speech.recognize(image)
+
+            if (
+                "person"
+                or "boy"
+                or "man"
+                or "woman" in result["description"]["captions"][0]["text"]
+            ):
+                # TODO more than one person?
+                try:
+                    person = speech.identify_face(
+                        speech.recognize_face(image)[0]["faceId"]
+                    )
+                except:
+                    person = "someone I don't recognise"
+
+                speech.speak(
+                    "I can see"
+                    + str(result["description"]["captions"][0]["text"])
+                    .replace("a person", str(person))
+                    .replace("a man", str(person))
+                    .replace("a boy", str(person))
+                )
+
+            else:
+                speech.speak(
+                    "I can see" + str(result["description"]["captions"][0]["text"])
+                )
 
         elif intent.intent_id == "Move":
 
             intentJson = json.loads(intent.intent_json)
+            amount = 0.5
+
+            for entity in intentJson["entities"]:
+                print(entity)
+                if entity["type"] == "Direction":
+                    print("direction found")
+                    direction = str(entity["entity"])
+                elif entity["type"] == "builtin.number":
+                    amount = str(entity["resolution"]["value"])
+
             try:
-                direction = intentJson["entities"][0]["entity"]
-                speech.speak("I'm going to move " + str(direction))
+                speech.speak("I'm going to move " + str(direction) + str(amount))
+                if direction == "forward":
+                    os.system(
+                        "python /home/hello-robot/Chatbot/moveFB.py 'forward' "
+                        + str(amount)
+                    )
+                elif direction == "back":
+                    os.system(
+                        "python /home/hello-robot/Chatbot/moveFB.py 'backwards' "
+                        + str(amount)
+                    )
+                elif direction == "left":
+                    os.system(
+                        "python /home/hello-robot/Chatbot/moveLR.py 'left' "
+                        + str(amount)
+                    )
+                elif direction == "right":
+                    os.system(
+                        "python /home/hello-robot/Chatbot/moveLR.py 'right' "
+                        + str(amount)
+                    )
+
             except:
                 speech.speak("I don't know what direction to move")
 
@@ -162,8 +219,69 @@ while run == True:
             now = datetime.now()
             speakabletime = now.strftime("%H:%M")
             speech.speak("The time is, " + speakabletime)
+
         elif intent.intent_id == "Stop":
             break
+        elif intent.intent_id == "Selfie":
+            speech.speak("Smile. 3, 2, 1.")
+            image = realsense.take_photo()
+            speech.speak("click")
+            speech.uploadBlob(image)
+            speech.speak(
+                "I've saved that to Azure for you, check it out in my blob storage"
+            )
+
+        elif intent.intent_id == "Arm":
+            up_down = ""
+            in_out = ""
+
+            intentJson = json.loads(intent.intent_json)
+
+            if "'up'" in str(intentJson):
+                up_down = "up"
+            elif "'down'" in str(intentJson):
+                up_down = "down"
+            if "'in'" in str(intentJson):
+                in_out = "in"
+            elif "'out'" in str(intentJson):
+                in_out = "out"
+
+            os.system(
+                "python /home/hello-robot/Chatbot/movearm.py '"
+                + up_down
+                + "' 1 '"
+                + in_out
+                + "' 1"
+            )
+
+        elif intent.intent_id == "Grip":
+            intentJson = json.loads(intent.intent_json)
+            if "'open'" in str(intentJson):
+                os.system("python /home/hello-robot/Chatbot/moveGrip.py 'open' 100")
+            elif "'close'" in str(intentJson):
+                os.system("python /home/hello-robot/Chatbot/moveGrip.py 'close' 20")
+            else:
+                speech.speak("open or close it?")
+
+        elif intent.intent_id == "Wrist":
+            intentJson = json.loads(intent.intent_json)
+
+            try:
+                for entity in intentJson["entities"]:
+                    if entity["type"] == "builtin.number":
+                        amount = str(entity["resolution"]["value"])
+
+                os.system(
+                    "python /home/hello-robot/Chatbot/moveWrist.py " + str(amount)
+                )
+
+            except:
+                speech.speak("Move it where?")
+
+        elif intent.intent_id == "Calibrate":
+            speech.speak("calibrating, stand back")
+            os.system("stretch_robot_home.py")
+            speech.speak("calibration complete, I can now use my limbs")
 
     except:
         if intent != "No good match found in KB.":

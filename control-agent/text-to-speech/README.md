@@ -19,4 +19,4 @@ In order to set this up for yourseld you will need the following named intents i
 ![LUISintents](./docs/images/LUISintents.png)
 
 and an optional QnA.
-`tip: you can automatically flesh out a lot of questiosn by assigning one of the pre-built personalities to your robot`
+`tip: you can automatically flesh out a lot of questions by assigning one of the pre-built personalities to your robot`

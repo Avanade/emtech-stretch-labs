@@ -28,3 +28,12 @@ unauthorized_licenses = [
         "original bsd",
         "eupl"
 ]
+
+# python-dotenv, starlette, and uvicorn packages are variants of BSD3; rather than the original "BSD License", which contained an advertising clause
+# pillow uses the HPND license, requiring that the author/creator is not referenced, and that any bundling will retain the copyright
+# - we aren't bundling, and the licence isn't more permissive than those we already use
+[tool.liccheck.authorized_packages]
+python-dotenv = "<=0.17.1"
+starlette = "<=0.14.2"
+uvicorn = "<=0.14.0"
+Pillow = "<=8.2.0"

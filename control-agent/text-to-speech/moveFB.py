@@ -7,12 +7,13 @@ robot = stretch_body.robot.Robot()
 robot.startup()
 move_by = 0
 
-print("recieved:", sys.argv[1], sys.argv[2])
+forward_back = sys.argv[1]
+ammount = sys.argv[2]
 
-if sys.argv[1] == "forward":
-    move_by = float(sys.argv[2])
-elif sys.argv[1] == "backwards":
-    move_by = -1 * float(sys.argv[2])
+if forward_back == "forward":
+    move_by = float(ammount)
+elif forward_back == "backwards":
+    move_by = -1 * float(ammount)
 
 
 robot.base.translate_by(move_by)

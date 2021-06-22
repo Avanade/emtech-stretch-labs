@@ -7,14 +7,17 @@ robot = stretch_body.robot.Robot()
 robot.startup()
 rotate_by = 0
 
-print("recieved:", sys.argv[1], sys.argv[2])
+left_right = sys.argv[1]
+ammount = sys.argv[2]
 
-if sys.argv[1] == "left":
-    rotate_by = float(sys.argv[2])
-elif sys.argv[1] == "right":
-    rotate_by = -1 * float(sys.argv[2])
+print("recieved:", left_right, ammount)
 
-if sys.argv[1] == "right" or "left":
+if left_right == "left":
+    rotate_by = float(ammount)
+elif left_right == "right":
+    rotate_by = -1 * float(ammount)
+
+if left_right == "right" or "left":
     robot.base.rotate_by(rotate_by)
     robot.push_command()
 

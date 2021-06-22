@@ -6,20 +6,24 @@ import stretch_body.robot
 robot = stretch_body.robot.Robot()
 robot.startup()
 
+up_down = sys.argv[1]
+ud_move_amount = sys.argv[1]
+in_out = sys.argv[3]
+io_move_ammount = sys.argv[4]
 
-if sys.argv[3] == "in":
+if in_out == "in":
 
-    robot.arm.move_by(-1 * float(sys.argv[4]))
+    robot.arm.move_by(-1 * float(io_move_ammount))
 
-elif sys.argv[3] == "out":
+elif in_out == "out":
 
-    robot.arm.move_by(float(sys.argv[4]))
+    robot.arm.move_by(float(io_move_ammount))
 
-if sys.argv[1] == "up":
-    robot.lift.move_by(float(sys.argv[2]))
+if up_down == "up":
+    robot.lift.move_by(float(ud_move_amount))
 
-elif sys.argv[1] == "down":
-    robot.lift.move_by(-1 * float(sys.argv[2]))
+elif up_down == "down":
+    robot.lift.move_by(-1 * float(ud_move_amount))
 
 robot.push_command()
 time.sleep(4.0)

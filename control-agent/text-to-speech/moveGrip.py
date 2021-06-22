@@ -1,6 +1,7 @@
-import stretch_body.robot
 import time
 import sys
+
+import stretch_body.robot
 
 robot = stretch_body.robot.Robot()
 robot.startup()

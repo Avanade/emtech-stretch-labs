@@ -1,5 +1,5 @@
-black
-pyngrok
-pillow
-uvicorn
-starelette
+black==21.6b0
+pyngrok==5.0.5
+pillow==8.2.0
+uvicorn==0.14.0
+starelette==0.14.2

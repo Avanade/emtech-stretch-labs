@@ -1,4 +1,4 @@
-To install this loval chatbot functionality simply move the contents of this folder onto the stretch, and run
+To install this local chatbot functionality simply move the contents of this folder onto the stretch, and run
 
 `python3 speech-detection`
 

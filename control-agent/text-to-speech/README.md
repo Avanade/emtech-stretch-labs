@@ -14,7 +14,7 @@ Recalibrate yourself
 
 # Set Up
 
-In order to set this up for yourseld you will need the following named intents in LUIS:
+In order to set this up for yourself you will need the following named intents in LUIS:
 
 ![LUISintents](./docs/images/LUISintents.png)
 

@@ -36,4 +36,4 @@ unauthorized_licenses = [
 python-dotenv = "<=0.17.1"
 starlette = "<=0.14.2"
 uvicorn = "<=0.14.0"
-pillow = "<=8.2.0"
+Pillow = "<=8.2.0"

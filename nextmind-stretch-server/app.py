@@ -5,9 +5,18 @@ from starlette.responses import JSONResponse
 from starlette.routing import Route
 
 PATH_TO_COMMANDS = "/home/hello-robot/Chatbot"
+COMMAND_DICT = {"opengrip": {"command": "moveGrip", "operation": "open"}}
 
 
-def run_command(command, operation, move_amount):
+async def run_command(request):
+
+    move_amount = request.path_params["amount"]
+
+    path = str(request.url.path).split("/")[1]
+
+    command = COMMAND_DICT[str(path)]["command"]
+    operation = COMMAND_DICT[str(path)]["operation"]
+
     os.system(
         "python "
         + PATH_TO_COMMANDS
@@ -19,11 +28,7 @@ def run_command(command, operation, move_amount):
         + str(move_amount)
     )
 
-
-async def open_grip(request):  # scan:ignore
-    move_amount = request.path_params["amount"]
-    run_command("moveGrip", "open", move_amount)
-    return JSONResponse({"open": str(move_amount)})
+    return JSONResponse({path: str(move_amount)})
 
 
 async def close_grip(request):  # scan:ignore
@@ -83,7 +88,7 @@ async def move_right(request):  # scan:ignore
 app = Starlette(
     debug=True,
     routes=[
-        Route("/opengrip/{amount}", open_grip, methods=["POST"]),
+        Route("/opengrip/{amount}", run_command, methods=["POST"]),
         Route("/closegrip/{amount}", close_grip, methods=["POST"]),
         Route("/armout/{amount}", arm_out, methods=["POST"]),
         Route("/armin/{amount}", arm_in, methods=["POST"]),

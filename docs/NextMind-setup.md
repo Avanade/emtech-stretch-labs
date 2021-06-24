@@ -45,7 +45,7 @@ Currently, the url needs to be given to unity manually. Update line 119 of [Move
 using (UnityWebRequest www = UnityWebRequest.Post($"[server.path.here]/{method}/{ammount}", form))
 ```
 
-Next, run the unity app by opening the [nextmind-robot-telepresense](./nextmind-robot-telepresence) directory in the unity explorer.
+Next, run the unity app by opening the [nextmind-robot-telepresence](./nextmind-robot-telepresence) directory in the unity explorer.
 
 Click run in the unity editor
 

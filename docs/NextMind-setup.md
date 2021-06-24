@@ -8,7 +8,7 @@ Move the 'nextmind-stretch-server' folder to the stretch robot directory, and en
 
 `N.B. These scripts will be replaced as soon as a python 3 module is available for robot move functionality`
 
-To start the server on the stretch, ensure the correct libraries are installed according to 'requirements.txt'.
+To start the server on the stretch, ensure the correct libraries are installed according to `requirements.txt`.
 
 In a terminal on the app, make sure no other processes are running, and then run
 

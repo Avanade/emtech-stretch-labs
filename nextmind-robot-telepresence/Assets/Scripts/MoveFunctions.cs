@@ -87,7 +87,7 @@ public class MoveFunctions : MonoBehaviour
         time_now = DateTime.Now;
         System.TimeSpan diff = time_now.Subtract(time_start);
         float diffloat = Convert.ToSingle(diff.TotalSeconds);
-        StartCoroutine(Upload("forwards", diffloat / 10));
+        StartCoroutine(Upload("forward", diffloat / 10));
     }
     public void backwards()
     {

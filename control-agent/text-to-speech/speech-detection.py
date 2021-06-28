@@ -7,8 +7,9 @@ from datetime import datetime
 
 import speech
 
-import realsense
+# import realsense
 
+LUIS_CONFIDENCE_LIMIT = 0.7
 PATH_TO_COMMANDS = "/home/hello-robot/Chatbot"
 COMMAND_DICT = {
     "opengrip": {"command": "moveGrip", "operation": "open"},
@@ -63,6 +64,7 @@ def get_qna_keys():
 
 
 def from_mic():
+    """Currently Unused function to call a single system microphone utterance to text"""
     key, region = get_speech_keys()
 
     speech_config = speechsdk.SpeechConfig(subscription=key, region=region)
@@ -76,7 +78,8 @@ def from_mic():
 
 
 def recognize_intent():
-
+    """System microphone to LUIS and QnA maker, returns either a
+    confident intent, or a QnA answer"""
     key, region, appid = get_luis_keys()
 
     intent_config = speechsdk.SpeechConfig(
@@ -97,7 +100,7 @@ def recognize_intent():
         return ""
     print(intentJson)
     # if low score, do QnA
-    if intentJson["topScoringIntent"]["score"] < 0.7:
+    if intentJson["topScoringIntent"]["score"] < LUIS_CONFIDENCE_LIMIT:
         qna = json.loads(QnA(intent_result.text))
         return qna["answers"][0]["answer"]
 
@@ -132,7 +135,7 @@ def recognize_intent():
 
 
 def QnA(question):
-
+    """Take a question string and return an answer string from QnA maker"""
     url, key = get_qna_keys()
     url = url
 
@@ -148,6 +151,8 @@ def QnA(question):
 
 
 async def run_command(instruction, move_amount):
+    """convert a simple instruction and move ammount to a movement on stretch using
+    the python 2 scripts - this will be upgraded to python 3 when available"""
 
     command = COMMAND_DICT[str(instruction)]["command"]
     operation = COMMAND_DICT[str(instruction)]["operation"]
@@ -167,6 +172,9 @@ async def run_command(instruction, move_amount):
 
 
 def get_amount(intent_json):
+    """search for builin number entity in an intent json
+    return either the number, or 'default' to indicate a defualt value
+    should be selected"""
     for entity in intent_json["entities"]:
         if entity["type"] == "builtin.number":
             amount = str(entity["resolution"]["value"])
@@ -177,6 +185,7 @@ def get_amount(intent_json):
 
 
 def move_intent(intent):
+    """Intent response to move the stretch FBLR"""
     intent_json = json.loads(intent.intent_json)
 
     for entity in intent_json["entities"]:
@@ -211,18 +220,22 @@ def weather_intent():
 
 
 def time_intent():
+    """Intent response speaks the current system time"""
     now = datetime.now()
     speakabletime = now.strftime("%H:%M")
     speech.speak("The time is, " + speakabletime)
 
 
 def calibrate_intent():
+    """Intent response calls the stretch calibration script"""
     speech.speak("calibrating, stand back")
     os.system("stretch_robot_home.py")
     speech.speak("calibration complete, I can now use my limbs")
 
 
 def selfie_intent():
+    """Intent response takes a photo on realsense and uplaod
+    to azure blob"""
     speech.speak("Smile. 3, 2, 1.")
     image = realsense.take_photo()
     speech.speak("click")
@@ -231,6 +244,7 @@ def selfie_intent():
 
 
 def grip_intent(intent):
+    """Intent response to open or close stretch grip"""
     intent_json = json.loads(intent.intent_json)
 
     amount = get_amount(intent_json)
@@ -246,6 +260,7 @@ def grip_intent(intent):
 
 
 def arm_intent(intent):
+    """Intent response to move arm UDIO"""
     up_down = ""
     in_out = ""
 
@@ -270,6 +285,7 @@ def arm_intent(intent):
 
 
 def wrist_intent(intent):
+    """Intent response to move the stretch wrist"""
     intentJson = json.loads(intent.intent_json)
 
     try:
@@ -284,6 +300,8 @@ def wrist_intent(intent):
 
 
 def vision_intent():
+    """Intent response to take a picture and analyse the contents
+    using Azure computer vision services"""
     speech.speak("I'm looking")
 
     image = realsense.take_photo()
@@ -315,6 +333,7 @@ def vision_intent():
 
 
 def intent_handler(intent):
+    """Handles the intent responces and calls the associated fucntions"""
 
     if isinstance(intent, str):
         if intent != "No good match found in KB.":
@@ -335,7 +354,7 @@ def intent_handler(intent):
     elif intent.intent_id == "Calibrate":
         calibrate_intent()
     elif intent.intent_id == "Stop":
-        run = False
+        return False
     elif intent.intent_id == "Selfie":
         selfie_intent()
     elif intent.intent_id == "Grip":
@@ -345,14 +364,16 @@ def intent_handler(intent):
     elif intent.intent_id == "Wrist":
         wrist_intent()
 
+    return True
+
 
 # Continuous loop starts here
 run = True
-
+# warm up confirmation
 speech.speak("starting up")
 
 while run == True:
 
     intent = recognize_intent()
 
-    intent_handler(intent)
+    run = intent_handler(intent)

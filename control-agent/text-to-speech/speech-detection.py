@@ -7,7 +7,7 @@ from datetime import datetime
 
 import speech
 
-import realsense
+# import realsense
 
 PATH_TO_COMMANDS = "/home/hello-robot/Chatbot"
 COMMAND_DICT = {
@@ -166,18 +166,29 @@ async def run_command(instruction, move_amount):
     return {command: str(move_amount)}
 
 
-def move_intent(intent):
-    intentJson = json.loads(intent.intent_json)
-    amount = 0.5
+def get_amount(intent_json):
+    for entity in intent_json["entities"]:
+        if entity["type"] == "builtin.number":
+            amount = str(entity["resolution"]["value"])
+    try:
+        return amount
+    except:
+        return "default"
 
-    # set ammount if specificed
-    for entity in intentJson["entities"]:
+
+def move_intent(intent):
+    intent_json = json.loads(intent.intent_json)
+
+    for entity in intent_json["entities"]:
         print(entity)
         if entity["type"] == "Direction":
             print("direction found")
             direction = str(entity["entity"])
-        elif entity["type"] == "builtin.number":
-            amount = str(entity["resolution"]["value"])
+
+    # set ammount if specificed
+    amount = get_amount(intent_json)
+    if amount == "default":
+        amount = 0.5
 
     try:
         speech.speak("I'm going to move " + str(direction) + str(amount))
@@ -220,11 +231,16 @@ def selfie_intent():
 
 
 def grip_intent(intent):
-    intentJson = json.loads(intent.intent_json)
-    if "'open'" in str(intentJson):
-        os.system("python /home/hello-robot/Chatbot/moveGrip.py 'open' 100")
-    elif "'close'" in str(intentJson):
-        os.system("python /home/hello-robot/Chatbot/moveGrip.py 'close' 20")
+    intent_json = json.loads(intent.intent_json)
+
+    amount = get_amount(intent_json)
+    if amount == "default":
+        amount = 20
+
+    if "'open'" in str(intent_json):
+        run_command("opengrip", amount)
+    elif "'close'" in str(intent_json):
+        run_command("closegrip", amount)
     else:
         speech.speak("open or close it?")
 

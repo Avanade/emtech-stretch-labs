@@ -19,7 +19,7 @@ COMMAND_DICT = {
 }
 
 
-async def run_command(request):
+async def run_command(request):# scan:ignore
 
     move_amount = request.path_params["amount"]
 

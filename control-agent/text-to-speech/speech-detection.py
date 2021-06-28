@@ -64,7 +64,7 @@ def get_qna_keys():
 
 
 def from_mic():
-    """Currently Unused function to call a single system microphone utterance to text"""
+    """TODO: Currently Unused function to call a single system microphone utterance to text"""
     key, region = get_speech_keys()
 
     speech_config = speechsdk.SpeechConfig(subscription=key, region=region)

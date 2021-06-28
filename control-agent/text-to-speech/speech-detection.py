@@ -7,7 +7,7 @@ from datetime import datetime
 
 import speech
 
-# import realsense
+import realsense
 
 PATH_TO_COMMANDS = "/home/hello-robot/Chatbot"
 COMMAND_DICT = {
@@ -31,7 +31,7 @@ def __location__():
     return __location__
 
 
-def getSpeechKeys():
+def get_speech_keys():
 
     with open(os.path.join(__location__(), "config.json")) as json_file:
         data = json.load(json_file)
@@ -41,7 +41,7 @@ def getSpeechKeys():
     return key, region
 
 
-def getLuisKeys():
+def get_luis_keys():
 
     with open(os.path.join(__location__(), "config.json")) as json_file:
         data = json.load(json_file)
@@ -52,7 +52,7 @@ def getLuisKeys():
     return key, region, appid
 
 
-def getQnAKeys():
+def get_qna_keys():
 
     with open(os.path.join(__location__(), "config.json")) as json_file:
         data = json.load(json_file)
@@ -63,7 +63,7 @@ def getQnAKeys():
 
 
 def from_mic():
-    key, region = getSpeechKeys()
+    key, region = get_speech_keys()
 
     speech_config = speechsdk.SpeechConfig(subscription=key, region=region)
     speech_recognizer = speechsdk.SpeechRecognizer(speech_config=speech_config)
@@ -77,7 +77,7 @@ def from_mic():
 
 def recognize_intent():
 
-    key, region, appid = getLuisKeys()
+    key, region, appid = get_luis_keys()
 
     intent_config = speechsdk.SpeechConfig(
         subscription=key,
@@ -133,7 +133,7 @@ def recognize_intent():
 
 def QnA(question):
 
-    url, key = getQnAKeys()
+    url, key = get_qna_keys()
     url = url
 
     payload = '{"question":"' + question + '"}'

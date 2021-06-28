@@ -1,13 +1,13 @@
-import azure.cognitiveservices.speech as speechsdk
-import os
-import json
-from azure.cognitiveservices.speech.speech_py_impl import IntentTrigger
-import requests
 from datetime import datetime
+import json
+import os
+import requests
+
+import azure.cognitiveservices.speech as speechsdk
+from azure.cognitiveservices.speech.speech_py_impl import IntentTrigger
 
 import speech
-
-# import realsense
+import realsense
 
 LUIS_CONFIDENCE_LIMIT = 0.7
 PATH_TO_COMMANDS = "/home/hello-robot/Chatbot"
@@ -97,8 +97,8 @@ def recognize_intent():
     try:
         intentJson = json.loads(intent_result.intent_json)
     except:
-        return ""
-    print(intentJson)
+        return "no intent recognised, or bad connection"
+
     # if low score, do QnA
     if intentJson["topScoringIntent"]["score"] < LUIS_CONFIDENCE_LIMIT:
         qna = json.loads(QnA(intent_result.text))

@@ -150,7 +150,7 @@ def QnA(question):
     return response.text
 
 
-async def run_command(instruction, move_amount):
+async def run_command(instruction, move_amount):  # scan:ignore
     """convert a simple instruction and move ammount to a movement on stretch using
     the python 2 scripts - this will be upgraded to python 3 when available"""
 

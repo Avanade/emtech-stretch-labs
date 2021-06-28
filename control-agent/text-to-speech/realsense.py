@@ -3,7 +3,7 @@ import numpy as np
 import time
 
 from PIL import Image
-import pyrealsense2 as rs
+import pyrealsense as rs
 
 
 def take_photo():

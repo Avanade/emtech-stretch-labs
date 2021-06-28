@@ -190,7 +190,7 @@ def recognize_face(blobData):
 
     try:
         conn = http.client.HTTPSConnection(url)
-        conn.request("POST", "/face/v1.0/detect?%s" % params, body, headers)
+        conn.request("POST", "/face/v1.0/detect?%s" % request_params, body, headers)
         response = conn.getresponse()
         data = response.read()
         print(data)

@@ -6,6 +6,7 @@ import requests
 from datetime import datetime
 
 import speech
+
 import realsense
 
 PATH_TO_COMMANDS = "/home/hello-robot/Chatbot"
@@ -298,6 +299,15 @@ def vision_intent():
 
 
 def intent_handler(intent):
+
+    if isinstance(intent, str):
+        if intent != "No good match found in KB.":
+            speech.speak(intent)
+            return
+        else:
+            speech.speak("I'm not sure I understood that")
+            return
+
     if intent.intent_id == "Vision":
         vision_intent()
     elif intent.intent_id == "Move":
@@ -318,12 +328,6 @@ def intent_handler(intent):
         arm_intent(intent)
     elif intent.intent_id == "Wrist":
         wrist_intent()
-
-    else:
-        if intent != "No good match found in KB.":
-            speech.speak(intent)
-        else:
-            speech.speak("I'm not sure I understood that")
 
 
 # Continuous loop starts here

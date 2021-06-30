@@ -7,7 +7,8 @@ import azure.cognitiveservices.speech as speechsdk
 from azure.cognitiveservices.speech.speech_py_impl import IntentTrigger
 
 import speech
-import realsense
+
+# import realsense
 
 LUIS_CONFIDENCE_LIMIT = 0.7
 PATH_TO_COMMANDS = "/home/hello-robot/Chatbot"
@@ -32,40 +33,9 @@ def __location__():
     return __location__
 
 
-def get_speech_keys():
-
-    with open(os.path.join(__location__(), "config.json")) as json_file:
-        data = json.load(json_file)
-        key = data["speechKey"]
-        region = data["speechLocation"]
-
-    return key, region
-
-
-def get_luis_keys():
-
-    with open(os.path.join(__location__(), "config.json")) as json_file:
-        data = json.load(json_file)
-        key = data["LuisKey"]
-        region = data["LuisRegion"]
-        appid = data["LuisAppId"]
-
-    return key, region, appid
-
-
-def get_qna_keys():
-
-    with open(os.path.join(__location__(), "config.json")) as json_file:
-        data = json.load(json_file)
-        url = data["qnaURL"]
-        key = data["qnaKey"]
-
-    return url, key
-
-
 def from_mic():
     """TODO: Currently Unused function to call a single system microphone utterance to text"""
-    key, region = get_speech_keys()
+    key, region = speech.get_speech_keys()
 
     speech_config = speechsdk.SpeechConfig(subscription=key, region=region)
     speech_recognizer = speechsdk.SpeechRecognizer(speech_config=speech_config)
@@ -80,7 +50,7 @@ def from_mic():
 def recognize_intent():
     """System microphone to LUIS and QnA maker, returns either a
     confident intent, or a QnA answer"""
-    key, region, appid = get_luis_keys()
+    key, region, app_id = speech.get_luis_keys()
 
     intent_config = speechsdk.SpeechConfig(
         subscription=key,
@@ -88,7 +58,7 @@ def recognize_intent():
     )
     intent_recognizer = speechsdk.intent.IntentRecognizer(speech_config=intent_config)
 
-    model = speechsdk.intent.LanguageUnderstandingModel(app_id=appid)
+    model = speechsdk.intent.LanguageUnderstandingModel(app_id=app_id)
     intent_recognizer.add_all_intents(model)
 
     intent_result = intent_recognizer.recognize_once()
@@ -97,7 +67,8 @@ def recognize_intent():
     try:
         intentJson = json.loads(intent_result.intent_json)
     except:
-        return "no intent recognised, or bad connection"
+        # No intent recogined
+        return "no intent recognised"
 
     # if low score, do QnA
     if intentJson["topScoringIntent"]["score"] < LUIS_CONFIDENCE_LIMIT:
@@ -136,8 +107,7 @@ def recognize_intent():
 
 def QnA(question):
     """Take a question string and return an answer string from QnA maker"""
-    url, key = get_qna_keys()
-    url = url
+    url, key = speech.get_qna_keys()
 
     payload = '{"question":"' + question + '"}'
     headers = {
@@ -336,12 +306,14 @@ def intent_handler(intent):
     """Handles the intent responces and calls the associated fucntions"""
 
     if isinstance(intent, str):
-        if intent != "No good match found in KB.":
+        if intent == "no intent recognised":
+            return True
+        elif intent != "No good match found in KB.":
             speech.speak(intent)
-            return
+            return True
         else:
             speech.speak("I'm not sure I understood that")
-            return
+            return True
 
     if intent.intent_id == "Vision":
         vision_intent()

@@ -8,7 +8,7 @@ from azure.cognitiveservices.speech.speech_py_impl import IntentTrigger
 
 import speech
 
-# import realsense
+import realsense
 
 LUIS_CONFIDENCE_LIMIT = 0.7
 PATH_TO_COMMANDS = "/home/hello-robot/Chatbot"

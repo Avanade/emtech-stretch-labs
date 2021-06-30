@@ -171,7 +171,7 @@ def recognize(blobData):
 
 
 def recognize_face(blob_data):
-    """Use Azure computer vision recognize from an image as bytes
+    """Use Azure computer vision recognize identified faces from an image as bytes
     Keyword arguments:
     blobData -- bytes data of an image
     """
@@ -205,7 +205,11 @@ def recognize_face(blob_data):
         print("Vision Error: ", e)
         return "error"
 
-    return json.loads(data)
+    people = []
+    for face in json.loads(data):
+        people.append(identify_face(face["faceId"]))
+
+    return people
 
 
 def identify_face(face_id):
@@ -248,9 +252,12 @@ def identify_face(face_id):
     # face logic
     # TODO remove hard coding
     results = json.loads(data)
-    _face_ids = {"fergus": "f9611b03-dc30-48bd-88f5-9ce251f688b6"}
-    if results[0]["candidates"][0]["personId"] == _face_ids["fergus"]:
-        return "Fergus"
+    _face_ids = {"Fergus": "f9611b03-dc30-48bd-88f5-9ce251f688b6"}
+    try:
+        if results[0]["candidates"][0]["personId"] == _face_ids["Fergus"]:
+            return "Fergus"
+    except:
+        return "a stranger"
 
     return "a stranger"
 

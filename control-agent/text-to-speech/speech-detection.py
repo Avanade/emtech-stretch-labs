@@ -326,7 +326,7 @@ def vision_intent():
             speech.speak(
                 "I can see"
                 + str(result["description"]["captions"][0]["text"])
-                + person_speak
+                + more_than_two_is_a_group_speak
             )
 
     else:

@@ -22,6 +22,9 @@ from azure.storage.blob import (
     AccountSasPermissions,
 )
 
+PERSON_GROUP_ID = "53cdefb1-c211-4215-a944-6b64128fa39f"
+FACE_IDS = {"f9611b03-dc30-48bd-88f5-9ce251f688b6": "Fergus"}
+
 
 def get_speech_keys():
     """Retrieve Keys for Azure Speech"""
@@ -232,7 +235,7 @@ def identify_face(face_id):
     )
 
     body = {
-        "PersonGroupId": "53cdefb1-c211-4215-a944-6b64128fa39f",
+        "PersonGroupId": PERSON_GROUP_ID,
         "faceIds": [str(face_id)],
         "maxNumOfCandidatesReturned": 1,
         "confidenceThreshold": 0.5,
@@ -250,16 +253,11 @@ def identify_face(face_id):
         return "error"
 
     # face logic
-    # TODO remove hard coding
     results = json.loads(data)
-    _face_ids = {"Fergus": "f9611b03-dc30-48bd-88f5-9ce251f688b6"}
     try:
-        if results[0]["candidates"][0]["personId"] == _face_ids["Fergus"]:
-            return "Fergus"
-    except:
+        return FACE_IDS[results[0]["candidates"][0]["personId"]]
+    except KeyError:
         return "a stranger"
-
-    return "a stranger"
 
 
 def uploadBlob(blob_bytes):

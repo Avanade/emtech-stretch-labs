@@ -306,7 +306,6 @@ def vision_intent():
         individual in result["description"]["captions"][0]["text"]
         for individual in INDIVIDUALS_LIST
     ):
-        # More than two people are considered a group - only deal with one or two people
 
         people = speech.recognize_face(image)
 

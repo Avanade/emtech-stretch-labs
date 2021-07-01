@@ -322,7 +322,7 @@ def vision_intent():
                 .replace("a woman", str(person_speak))
             )
         elif len(people) == 2:
-            person_speak = ". they are " + people[0] + "and" + people[1]
+            more_than_two_is_a_group_speak = ". they are " + people[0] + "and" + people[1]
             speech.speak(
                 "I can see"
                 + str(result["description"]["captions"][0]["text"])

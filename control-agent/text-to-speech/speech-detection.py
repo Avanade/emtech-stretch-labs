@@ -276,27 +276,57 @@ def vision_intent():
 
     image = realsense.take_photo()
 
+    INDIVIDUALS_LIST = [
+        "person",
+        "boy",
+        "girl",
+        "man",
+        "woman",
+        "men",
+        "women",
+        "people",
+    ]
     result = speech.recognize(image)
 
-    if (
-        "person"
-        or "boy"
-        or "man"
-        or "woman" in result["description"]["captions"][0]["text"]
-    ):
-        # TODO more than one person?
-        try:
-            person = speech.identify_face(speech.recognize_face(image)[0]["faceId"])
-        except:
-            person = "someone I don't recognise"
+    if "group" in result["description"]["captions"][0]["text"]:
+        people = speech.recognize_face(image)
+
+        if people.count("a stranger") == len(people):
+            speak_people = "no one I know"
+        else:
+            speak_people = " ".join(people.remove("a stranger"))
 
         speech.speak(
-            "I can see"
-            + str(result["description"]["captions"][0]["text"])
-            .replace("a person", str(person))
-            .replace("a man", str(person))
-            .replace("a boy", str(person))
+            result["description"]["captions"][0]["text"]
+            + ". In the group I can see "
+            + speak_people
         )
+
+    elif any(
+        individual in result["description"]["captions"][0]["text"]
+        for individual in INDIVIDUALS_LIST
+    ):
+
+        people = speech.recognize_face(image)
+
+        if len(people) == 1:
+            person_speak = people[0]
+            speech.speak(
+                "I can see"
+                + str(result["description"]["captions"][0]["text"])
+                .replace("a person", str(person_speak))
+                .replace("a man", str(person_speak))
+                .replace("a boy", str(person_speak))
+                .replace("a girl", str(person_speak))
+                .replace("a woman", str(person_speak))
+            )
+        elif len(people) == 2:
+            more_than_two_is_a_group_speak = ". they are " + people[0] + "and" + people[1]
+            speech.speak(
+                "I can see"
+                + str(result["description"]["captions"][0]["text"])
+                + more_than_two_is_a_group_speak
+            )
 
     else:
         speech.speak("I can see" + str(result["description"]["captions"][0]["text"]))
@@ -343,6 +373,8 @@ def intent_handler(intent):
 run = True
 # warm up confirmation
 speech.speak("starting up")
+
+vision_intent()
 
 while run == True:
 

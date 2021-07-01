@@ -22,6 +22,9 @@ from azure.storage.blob import (
     AccountSasPermissions,
 )
 
+PERSON_GROUP_ID = "53cdefb1-c211-4215-a944-6b64128fa39f"
+FACE_IDS = {"f9611b03-dc30-48bd-88f5-9ce251f688b6": "Fergus"}
+
 
 def get_speech_keys():
     """Retrieve Keys for Azure Speech"""
@@ -171,7 +174,7 @@ def recognize(blobData):
 
 
 def recognize_face(blob_data):
-    """Use Azure computer vision recognize from an image as bytes
+    """Use Azure computer vision recognize identified faces from an image as bytes
     Keyword arguments:
     blobData -- bytes data of an image
     """
@@ -205,7 +208,11 @@ def recognize_face(blob_data):
         print("Vision Error: ", e)
         return "error"
 
-    return json.loads(data)
+    people = []
+    for face in json.loads(data):
+        people.append(identify_face(face["faceId"]))
+
+    return people
 
 
 def identify_face(face_id):
@@ -228,7 +235,7 @@ def identify_face(face_id):
     )
 
     body = {
-        "PersonGroupId": "53cdefb1-c211-4215-a944-6b64128fa39f",
+        "PersonGroupId": PERSON_GROUP_ID,
         "faceIds": [str(face_id)],
         "maxNumOfCandidatesReturned": 1,
         "confidenceThreshold": 0.5,
@@ -246,13 +253,11 @@ def identify_face(face_id):
         return "error"
 
     # face logic
-    # TODO remove hard coding
     results = json.loads(data)
-    _face_ids = {"fergus": "f9611b03-dc30-48bd-88f5-9ce251f688b6"}
-    if results[0]["candidates"][0]["personId"] == _face_ids["fergus"]:
-        return "Fergus"
-
-    return "a stranger"
+    try:
+        return FACE_IDS[results[0]["candidates"][0]["personId"]]
+    except KeyError:
+        return "a stranger"
 
 
 def uploadBlob(blob_bytes):

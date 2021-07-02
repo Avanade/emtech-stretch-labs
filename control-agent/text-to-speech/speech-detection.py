@@ -321,7 +321,9 @@ def vision_intent():
                 .replace("a woman", str(person_speak))
             )
         elif len(people) == 2:
-            more_than_two_is_a_group_speak = ". they are " + people[0] + "and" + people[1]
+            more_than_two_is_a_group_speak = (
+                ". they are " + people[0] + "and" + people[1]
+            )
             speech.speak(
                 "I can see"
                 + str(result["description"]["captions"][0]["text"])
@@ -330,6 +332,19 @@ def vision_intent():
 
     else:
         speech.speak("I can see" + str(result["description"]["captions"][0]["text"]))
+
+
+def joke_intent():
+    """Reads aloud a joke, as an example of a data
+    lookup with an external API"""
+    speech.speak("ok - let me think of one")
+
+    url = "https://v2.jokeapi.dev/joke/Programming"
+    query = {"type": "twopart", "blacklistFlags": "nsfw"}
+    response = requests.get(url, params=query)
+
+    speech.speak(response.json()["setup"])
+    speech.speak(response.json()["delivery"])
 
 
 def intent_handler(intent):
@@ -365,6 +380,8 @@ def intent_handler(intent):
         arm_intent(intent)
     elif intent.intent_id == "Wrist":
         wrist_intent()
+    elif intent.intent_id == "Joke":
+        joke_intent()
 
     return True
 
@@ -373,8 +390,6 @@ def intent_handler(intent):
 run = True
 # warm up confirmation
 speech.speak("starting up")
-
-vision_intent()
 
 while run == True:
 

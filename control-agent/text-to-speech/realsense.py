@@ -6,41 +6,43 @@ from PIL import Image
 import pyrealsense2 as rs
 
 
-def take_photo():
-    pipeline = rs.pipeline()
-    config = rs.config()
+class Realsense:
+    def __init__(self):
+        """initiates the camera for use"""
+        self.pipeline = rs.pipeline()
+        config = rs.config()
+        config.enable_stream(rs.stream.color, 1280, 720, rs.format.bgr8, 30)
+        config.enable_stream(rs.stream.depth, 1280, 720, rs.format.z16, 30)
 
-    config.enable_stream(rs.stream.color, 1280, 720, rs.format.bgr8, 30)
+        self.pipeline.start(config)
+        self.align = rs.align(rs.stream.color)
 
-    profile = pipeline.start(config)
-    # Get the sensor once at the beginning. (Sensor index: 1)
-    sensor = pipeline.get_active_profile().get_device().query_sensors()[1]
-    # Set the exposure anytime during the operation
-    sensor.set_option(rs.option.exposure, 80.000)
+    def get_frame(self):
+        """Take a depth and colour frame"""
+        frames = self.pipeline.wait_for_frames()
+        aligned_frames = self.align.process(frames)
+        depth_frame = aligned_frames.get_depth_frame()
+        colour_frame = aligned_frames.get_color_frame()
 
-    # We will be removing the background of objects more than
-    #  clipping_distance_in_meters meters away
-    clipping_distance_in_meters = 1.5
+        if not depth_frame or not colour_frame:
+            return False, None, None
 
-    time.sleep(2)  # or the picture will look green
+        depth_image = np.asanyarray(depth_frame.get_data())
+        colour_image = np.asanyarray(colour_frame.get_data())
 
-    align_to = rs.stream.color
-    align = rs.align(align_to)
+        return True, colour_image, depth_image
 
-    frames = pipeline.wait_for_frames()
+    def take_colour_photo(self):
+        status, colour_image, depth_image = self.get_frame()
+        r_colour_image = np.rot90(colour_image, 3)
 
-    aligned_frames = align.process(frames)
-    color_frame = aligned_frames.get_color_frame()
+        # TODO: check why image layers come back incorrectly
+        bimg = Image.fromarray(r_colour_image, "RGB")
+        b, g, r = bimg.split()
+        img = Image.merge("RGB", (r, g, b))
+        img.save("test.png")
 
-    color_image = np.asanyarray(color_frame.get_data())
-    r_color_image = np.rot90(color_image, 3)
+        img_byte = io.BytesIO()
+        img.save(img_byte, format="PNG")
 
-    bimg = Image.fromarray(r_color_image, "RGB")
-    b, g, r = bimg.split()
-    img = Image.merge("RGB", (r, g, b))
-    img.save("test.png")
-
-    img_byte = io.BytesIO()
-    img.save(img_byte, format="PNG")
-
-    return img_byte.getvalue()
+        return img_byte.getvalue()

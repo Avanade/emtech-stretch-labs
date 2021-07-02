@@ -8,7 +8,7 @@ from azure.cognitiveservices.speech.speech_py_impl import IntentTrigger
 
 import speech
 
-import realsense
+from realsense import *
 
 LUIS_CONFIDENCE_LIMIT = 0.7
 PATH_TO_COMMANDS = "/home/hello-robot/Chatbot"
@@ -207,7 +207,7 @@ def selfie_intent():
     """Intent response takes a photo on realsense and uplaod
     to azure blob"""
     speech.speak("Smile. 3, 2, 1.")
-    image = realsense.take_photo()
+    image = Realsense.take_colour_photo()
     speech.speak("click")
     speech.uploadBlob(image)
     speech.speak("I've saved that to Azure for you, check it out in my blob storage")
@@ -321,7 +321,9 @@ def vision_intent():
                 .replace("a woman", str(person_speak))
             )
         elif len(people) == 2:
-            more_than_two_is_a_group_speak = ". they are " + people[0] + "and" + people[1]
+            more_than_two_is_a_group_speak = (
+                ". they are " + people[0] + "and" + people[1]
+            )
             speech.speak(
                 "I can see"
                 + str(result["description"]["captions"][0]["text"])
@@ -373,8 +375,8 @@ def intent_handler(intent):
 run = True
 # warm up confirmation
 speech.speak("starting up")
-
-vision_intent()
+# start camera
+realsense = Realsense()
 
 while run == True:
 

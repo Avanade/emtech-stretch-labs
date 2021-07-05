@@ -207,7 +207,7 @@ def selfie_intent():
     """Intent response takes a photo on realsense and uplaod
     to azure blob"""
     speech.speak("Smile. 3, 2, 1.")
-    image = Realsense.take_colour_photo()
+    image = realsense.take_colour_photo()
     speech.speak("click")
     speech.uploadBlob(image)
     speech.speak("I've saved that to Azure for you, check it out in my blob storage")
@@ -274,7 +274,7 @@ def vision_intent():
     using Azure computer vision services"""
     speech.speak("I'm looking")
 
-    image = realsense.take_photo()
+    image = realsense.take_colour_photo()
 
     INDIVIDUALS_LIST = [
         "person",

@@ -260,7 +260,7 @@ def identify_face(face_id):
         return "a stranger"
 
 
-def uploadBlob(blob_bytes):
+def upload_blob(blob_bytes):
     """upload a blob to the Azure storage account named as a timestamp
     Keyword arguments:
     blobBytes -- bytes data of a file to uplaod

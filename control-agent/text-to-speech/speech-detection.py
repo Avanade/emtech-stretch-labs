@@ -209,7 +209,7 @@ def selfie_intent():
     speech.speak("Smile. 3, 2, 1.")
     image = realsense.take_colour_photo()
     speech.speak("click")
-    speech.uploadBlob(image)
+    speech.upload_blob(image)
     speech.speak("I've saved that to Azure for you, check it out in my blob storage")
 
 

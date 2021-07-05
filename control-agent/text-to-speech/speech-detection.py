@@ -334,19 +334,6 @@ def vision_intent():
         speech.speak("I can see" + str(result["description"]["captions"][0]["text"]))
 
 
-def joke_intent():
-    """Reads aloud a joke, as an example of a data
-    lookup with an external API"""
-    speech.speak("ok - let me think of one")
-
-    url = "https://v2.jokeapi.dev/joke/Programming"
-    query = {"type": "twopart", "blacklistFlags": "nsfw"}
-    response = requests.get(url, params=query)
-
-    speech.speak(response.json()["setup"])
-    speech.speak(response.json()["delivery"])
-
-
 def intent_handler(intent):
     """Handles the intent responces and calls the associated fucntions"""
 
@@ -380,8 +367,6 @@ def intent_handler(intent):
         arm_intent(intent)
     elif intent.intent_id == "Wrist":
         wrist_intent()
-    elif intent.intent_id == "Joke":
-        joke_intent()
 
     return True
 
@@ -393,9 +378,10 @@ speech.speak("starting up")
 # start camera
 realsense = Realsense()
 
-
 while run == True:
 
     intent = recognize_intent()
 
     run = intent_handler(intent)
+
+    continue

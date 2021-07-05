@@ -8,7 +8,7 @@ from azure.cognitiveservices.speech.speech_py_impl import IntentTrigger
 
 import speech
 
-import realsense
+from realsense import *
 
 LUIS_CONFIDENCE_LIMIT = 0.7
 PATH_TO_COMMANDS = "/home/hello-robot/Chatbot"
@@ -207,9 +207,9 @@ def selfie_intent():
     """Intent response takes a photo on realsense and uplaod
     to azure blob"""
     speech.speak("Smile. 3, 2, 1.")
-    image = realsense.take_photo()
+    image = realsense.take_colour_photo()
     speech.speak("click")
-    speech.uploadBlob(image)
+    speech.upload_blob(image)
     speech.speak("I've saved that to Azure for you, check it out in my blob storage")
 
 
@@ -274,7 +274,7 @@ def vision_intent():
     using Azure computer vision services"""
     speech.speak("I'm looking")
 
-    image = realsense.take_photo()
+    image = realsense.take_colour_photo()
 
     INDIVIDUALS_LIST = [
         "person",
@@ -334,19 +334,6 @@ def vision_intent():
         speech.speak("I can see" + str(result["description"]["captions"][0]["text"]))
 
 
-def joke_intent():
-    """Reads aloud a joke, as an example of a data
-    lookup with an external API"""
-    speech.speak("ok - let me think of one")
-
-    url = "https://v2.jokeapi.dev/joke/Programming"
-    query = {"type": "twopart", "blacklistFlags": "nsfw"}
-    response = requests.get(url, params=query)
-
-    speech.speak(response.json()["setup"])
-    speech.speak(response.json()["delivery"])
-
-
 def intent_handler(intent):
     """Handles the intent responces and calls the associated fucntions"""
 
@@ -380,8 +367,6 @@ def intent_handler(intent):
         arm_intent(intent)
     elif intent.intent_id == "Wrist":
         wrist_intent()
-    elif intent.intent_id == "Joke":
-        joke_intent()
 
     return True
 
@@ -390,9 +375,13 @@ def intent_handler(intent):
 run = True
 # warm up confirmation
 speech.speak("starting up")
+# start camera
+realsense = Realsense()
 
 while run == True:
 
     intent = recognize_intent()
 
     run = intent_handler(intent)
+
+    continue

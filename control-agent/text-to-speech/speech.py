@@ -265,12 +265,12 @@ def upload_blob(blob_bytes):
     Keyword arguments:
     blobBytes -- bytes data of a file to uplaod
     """
-    name = datetime.now().strftime("%d/%m/%Y-%H:%M:%S")
+    blob_name = datetime.now().strftime("%d/%m/%Y-%H:%M:%S")
     conn, container, name, key = get_blob_keys()
     blob = BlobClient.from_connection_string(
         conn_str=conn,
         container_name=container,
-        blob_name=name,
+        blob_name=blob_name,
     )
 
     blob.upload_blob(blob_bytes)

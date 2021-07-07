@@ -46,6 +46,17 @@ def get_vision_keys():
     return key, url
 
 
+def get_custom_vision_keys():
+    """Retrieve Keys for Azure Vision"""
+    load_dotenv()
+
+    key = os.getenv("CUSTOM_VISION_KEY")
+    url = os.getenv("CUSTOM_VISION_ENDPOINT")
+    project_id = os.getenv("CUST_PROJ_ID")
+    iteration_name = os.getenv("CUST_ITER_NAME")
+    return key, url, project_id, iteration_name
+
+
 def get_face_keys():
     """Retrieve Keys for Azure Vision - Face"""
     load_dotenv()
@@ -274,3 +285,47 @@ def upload_blob(blob_bytes):
     )
 
     blob.upload_blob(blob_bytes)
+
+
+from azure.cognitiveservices.vision.customvision.prediction import (
+    CustomVisionPredictionClient,
+)
+from msrest.authentication import ApiKeyCredentials
+from io import BytesIO
+
+
+def find_ball(blob_data):
+
+    key, url, project_id, iteration_name = get_custom_vision_keys()
+
+    predictor = CustomVisionPredictionClient(url, key)
+
+    width, height = 720, 1280
+
+    ball_prob_lim = 0.5
+
+    prediction_credentials = ApiKeyCredentials(in_headers={"Prediction-key": key})
+    predictor = CustomVisionPredictionClient(url, prediction_credentials)
+
+    with (BytesIO(blob_data)) as image_contents:
+        results = predictor.detect_image(
+            project_id, iteration_name, image_contents.read()
+        )
+
+        for prediction in results.predictions:
+            if (
+                prediction.tag_name == "tennis ball"
+                and prediction.probability > ball_prob_lim
+            ):
+
+                cx = int(
+                    (prediction.bounding_box.top * height)
+                    + ((prediction.bounding_box.height * height) / 2)
+                )
+                cy = int(
+                    (prediction.bounding_box.left * width)
+                    + (prediction.bounding_box.width * width) / 2
+                )
+                object_center = [cx, cy]
+
+                return object_center

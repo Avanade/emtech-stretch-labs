@@ -334,6 +334,15 @@ def vision_intent():
         speech.speak("I can see" + str(result["description"]["captions"][0]["text"]))
 
 
+def find_ball_intent():
+    print("try to find the ball")
+    ret, bgr_frame, depth_frame = realsense.get_frame_stream()
+    center_point = speech.find_ball(bgr_frame)
+
+    depth_mm = depth_frame[center_point[1], center_point[0]]
+    print("depth = ", depth_mm)
+
+
 def intent_handler(intent):
     """Handles the intent responces and calls the associated fucntions"""
 
@@ -367,6 +376,8 @@ def intent_handler(intent):
         arm_intent(intent)
     elif intent.intent_id == "Wrist":
         wrist_intent()
+    elif intent.intent_id == "FindBall":
+        find_ball_intent()
 
     return True
 

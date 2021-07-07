@@ -348,7 +348,7 @@ def joke_intent():
 
 
 def find_ball_intent():
-    bgr_frame, depth_frame = realsense.get_colur_depth_frame()
+    bgr_frame, depth_frame = realsense.take_colour_depth_photo()
     center_point = speech.find_ball(bgr_frame)
 
     print(depth_frame)
@@ -407,6 +407,7 @@ run = True
 speech.speak("starting up")
 # start camera
 realsense = Realsense()
+speech.speak("Ready")
 
 while run == True:
 

@@ -3,8 +3,12 @@ import os
 from datetime import datetime, timedelta
 import http.client, urllib.request, urllib.parse, urllib.error
 from dotenv import load_dotenv
+from io import BytesIO
 
-
+from azure.cognitiveservices.vision.customvision.prediction import (
+    CustomVisionPredictionClient,
+)
+from msrest.authentication import ApiKeyCredentials
 from azure.cognitiveservices.speech import (
     AudioDataStream,
     SpeechConfig,
@@ -24,6 +28,7 @@ from azure.storage.blob import (
 
 PERSON_GROUP_ID = "53cdefb1-c211-4215-a944-6b64128fa39f"
 FACE_IDS = {"f9611b03-dc30-48bd-88f5-9ce251f688b6": "Fergus"}
+BALL_PROBABILITY_LIMIT = 0.5
 
 
 def get_speech_keys():
@@ -287,13 +292,6 @@ def upload_blob(blob_bytes):
     blob.upload_blob(blob_bytes)
 
 
-from azure.cognitiveservices.vision.customvision.prediction import (
-    CustomVisionPredictionClient,
-)
-from msrest.authentication import ApiKeyCredentials
-from io import BytesIO
-
-
 def find_ball(blob_data):
 
     key, url, project_id, iteration_name = get_custom_vision_keys()
@@ -301,8 +299,6 @@ def find_ball(blob_data):
     predictor = CustomVisionPredictionClient(url, key)
 
     width, height = 720, 1280
-
-    ball_prob_lim = 0.5
 
     prediction_credentials = ApiKeyCredentials(in_headers={"Prediction-key": key})
     predictor = CustomVisionPredictionClient(url, prediction_credentials)
@@ -315,7 +311,7 @@ def find_ball(blob_data):
         for prediction in results.predictions:
             if (
                 prediction.tag_name == "tennis ball"
-                and prediction.probability > ball_prob_lim
+                and prediction.probability > BALL_PROBABILITY_LIMIT
             ):
 
                 cx = int(

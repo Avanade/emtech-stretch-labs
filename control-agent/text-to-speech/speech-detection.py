@@ -334,6 +334,19 @@ def vision_intent():
         speech.speak("I can see" + str(result["description"]["captions"][0]["text"]))
 
 
+def joke_intent():
+    """Reads aloud a joke, as an example of a data
+    lookup with an external API"""
+    speech.speak("ok - let me think of one")
+
+    url = "https://v2.jokeapi.dev/joke/Programming"
+    query = {"type": "twopart", "blacklistFlags": "nsfw"}
+    response = requests.get(url, params=query)
+
+    speech.speak(response.json()["setup"])
+    speech.speak(response.json()["delivery"])
+
+
 def find_ball_intent():
     print("try to find the ball")
     ret, bgr_frame, depth_frame = realsense.get_frame_stream()

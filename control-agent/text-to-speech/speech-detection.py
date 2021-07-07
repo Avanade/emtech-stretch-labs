@@ -348,12 +348,18 @@ def joke_intent():
 
 
 def find_ball_intent():
-    print("try to find the ball")
-    ret, bgr_frame, depth_frame = realsense.get_frame_stream()
+    bgr_frame, depth_frame = realsense.get_colur_depth_frame()
     center_point = speech.find_ball(bgr_frame)
 
-    depth_mm = depth_frame[center_point[1], center_point[0]]
-    print("depth = ", depth_mm)
+    print(depth_frame)
+
+    if center_point == None:
+        speech.speak("I dont see it")
+    else:
+        depth_mm = depth_frame[center_point[1], center_point[0]]
+        depth_cm = round(depth_mm / 10)
+        print(depth_mm, depth_cm)
+        speech.speak("I can see the ball about " + str(depth_cm) + "centimeters away")
 
 
 def intent_handler(intent):

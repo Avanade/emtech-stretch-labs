@@ -120,6 +120,10 @@ def blob_sas(blob_name):
     return url
 
 
+async def speak_async(text):
+    speak(text)
+
+
 def speak(text):
     """Read out input text on the local system playback device
     Keyword arguments:
@@ -135,7 +139,7 @@ def speak(text):
     synthesizer.speak_text_async(text)
 
 
-def recognize(blobData):
+async def recognize(blobData):
     """Use Azure computer vision recognize from an image as bytes
     Keyword arguments:
     blobData -- bytes data of an image
@@ -173,7 +177,7 @@ def recognize(blobData):
     return json.loads(data)
 
 
-def recognize_face(blob_data):
+async def recognize_face(blob_data):
     """Use Azure computer vision recognize identified faces from an image as bytes
     Keyword arguments:
     blobData -- bytes data of an image

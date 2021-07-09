@@ -5,11 +5,10 @@ import requests
 
 import azure.cognitiveservices.speech as speechsdk
 from azure.cognitiveservices.speech.speech_py_impl import IntentTrigger
-import asyncio
 
 import speech
 
-# from realsense import *
+from realsense import *
 
 LUIS_CONFIDENCE_LIMIT = 0.7
 PATH_TO_COMMANDS = "/home/hello-robot/Chatbot"
@@ -25,17 +24,6 @@ COMMAND_DICT = {
     "left": {"command": "moveLR", "operation": "left"},
     "right": {"command": "moveLR", "operation": "right"},
 }
-
-INDIVIDUALS_LIST = [
-    "person",
-    "boy",
-    "girl",
-    "man",
-    "woman",
-    "men",
-    "women",
-    "people",
-]
 
 
 def __location__():
@@ -281,24 +269,24 @@ def wrist_intent(intent):
         speech.speak("Move it where?")
 
 
-async def vision_intent():
+def vision_intent():
     """Intent response to take a picture and analyse the contents
     using Azure computer vision services"""
+    speech.speak("I'm looking")
 
-    # image = realsense.take_colour_photo()
-    response = requests.get(
-        "https://d1ix0byejyn2u7.cloudfront.net/drive/images/uploads/headers/ws_cropper/1_0x0_790x520_0x520_wayve-driverless-trial-london.jpg"
-    )
-    image = response.content
+    image = realsense.take_colour_photo()
 
-    image_task = asyncio.create_task(
-        speech.recognize(image)
-    )  # image = realsense.take_colour_photo()
-    speech_task = asyncio.create_task(speech.speak_async("I'm looking now"))
-
-    await speech_task
-    await image_task
-    result = image_task.result()
+    INDIVIDUALS_LIST = [
+        "person",
+        "boy",
+        "girl",
+        "man",
+        "woman",
+        "men",
+        "women",
+        "people",
+    ]
+    result = speech.recognize(image)
 
     if "group" in result["description"]["captions"][0]["text"]:
         people = speech.recognize_face(image)
@@ -386,15 +374,9 @@ def intent_handler(intent):
 # Continuous loop starts here
 run = True
 # warm up confirmation
-# speech.speak("starting up")
+speech.speak("starting up")
 # start camera
-# realsense = Realsense()
-
-import requests
-
-asyncio.run(vision_intent())
-
-speech.speak("done")
+realsense = Realsense()
 
 while run == True:
 

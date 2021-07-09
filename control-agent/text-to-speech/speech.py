@@ -4,8 +4,6 @@ from datetime import datetime, timedelta
 import http.client, urllib.request, urllib.parse, urllib.error
 from dotenv import load_dotenv
 
-import asyncio
-
 
 from azure.cognitiveservices.speech import (
     AudioDataStream,
@@ -122,12 +120,6 @@ def blob_sas(blob_name):
     return url
 
 
-@asyncio.coroutine
-async def speak_async(text):
-    """async calling of speach"""
-    speak(text)
-
-
 def speak(text):
     """Read out input text on the local system playback device
     Keyword arguments:
@@ -143,8 +135,7 @@ def speak(text):
     synthesizer.speak_text_async(text)
 
 
-@asyncio.coroutine
-async def recognize(blobData):
+def recognize(blobData):
     """Use Azure computer vision recognize from an image as bytes
     Keyword arguments:
     blobData -- bytes data of an image

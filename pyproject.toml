@@ -15,6 +15,7 @@ authorized_licenses = [
         "mit",
         "mit license",
         "python software foundation license",
+        "PSF"
 
 ]
 

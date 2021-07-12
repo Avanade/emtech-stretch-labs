@@ -5,6 +5,7 @@ import requests
 
 import azure.cognitiveservices.speech as speechsdk
 from azure.cognitiveservices.speech.speech_py_impl import IntentTrigger
+import asyncio
 
 import speech
 
@@ -24,6 +25,17 @@ COMMAND_DICT = {
     "left": {"command": "moveLR", "operation": "left"},
     "right": {"command": "moveLR", "operation": "right"},
 }
+
+INDIVIDUALS_LIST = [
+    "person",
+    "boy",
+    "girl",
+    "man",
+    "woman",
+    "men",
+    "women",
+    "people",
+]
 
 
 def __location__():
@@ -269,27 +281,23 @@ def wrist_intent(intent):
         speech.speak("Move it where?")
 
 
-def vision_intent():
+async def vision_intent():
     """Intent response to take a picture and analyse the contents
     using Azure computer vision services"""
-    speech.speak("I'm looking")
 
     image = realsense.take_colour_photo()
 
-    INDIVIDUALS_LIST = [
-        "person",
-        "boy",
-        "girl",
-        "man",
-        "woman",
-        "men",
-        "women",
-        "people",
-    ]
-    result = speech.recognize(image)
+    image_task = asyncio.create_task(speech.recognize(image))
+    speech_task = asyncio.create_task(speech.speak_async("I'm looking now"))
+    face_task = asyncio.create_task(speech.recognize_face(image))
+
+    await speech_task
+    await image_task
+    result = image_task.result()
 
     if "group" in result["description"]["captions"][0]["text"]:
-        people = speech.recognize_face(image)
+        await face_task
+        people = face_task.result()
 
         if people.count("a stranger") == len(people):
             speak_people = "no one I know"
@@ -307,7 +315,8 @@ def vision_intent():
         for individual in INDIVIDUALS_LIST
     ):
 
-        people = speech.recognize_face(image)
+        await face_task
+        people = face_task.result()
 
         if len(people) == 1:
             person_speak = people[0]
@@ -348,7 +357,7 @@ def intent_handler(intent):
             return True
 
     if intent.intent_id == "Vision":
-        vision_intent()
+        asyncio.run(vision_intent())
     elif intent.intent_id == "Move":
         move_intent(intent)
     elif intent.intent_id == "Weather.QueryWeather":
@@ -377,6 +386,7 @@ run = True
 speech.speak("starting up")
 # start camera
 realsense = Realsense()
+
 
 while run == True:
 

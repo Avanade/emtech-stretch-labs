@@ -287,17 +287,17 @@ async def vision_intent():
 
     image = realsense.take_colour_photo()
 
-    image_task = asyncio.create_task(
-        speech.recognize(image)
-    )  # image = realsense.take_colour_photo()
+    image_task = asyncio.create_task(speech.recognize(image))
     speech_task = asyncio.create_task(speech.speak_async("I'm looking now"))
+    face_task = asyncio.create_task(speech.recognize_face(image))
 
     await speech_task
     await image_task
     result = image_task.result()
 
     if "group" in result["description"]["captions"][0]["text"]:
-        people = speech.recognize_face(image)
+        await face_task
+        people = face_task.result()
 
         if people.count("a stranger") == len(people):
             speak_people = "no one I know"
@@ -315,7 +315,8 @@ async def vision_intent():
         for individual in INDIVIDUALS_LIST
     ):
 
-        people = speech.recognize_face(image)
+        await face_task
+        people = face_task.result()
 
         if len(people) == 1:
             person_speak = people[0]

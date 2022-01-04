@@ -2,6 +2,7 @@ from datetime import datetime
 import json
 import os
 import requests
+import openai
 
 import azure.cognitiveservices.speech as speechsdk
 from azure.cognitiveservices.speech.speech_py_impl import IntentTrigger
@@ -84,7 +85,7 @@ def recognize_intent():
 
     # if low score, do QnA
     if intentJson["topScoringIntent"]["score"] < LUIS_CONFIDENCE_LIMIT:
-        qna = json.loads(QnA(intent_result.text))
+        qna = json.loads(QnA_GPT(intent_result.text))
         return qna["answers"][0]["answer"]
 
     if intent_result.reason == speechsdk.ResultReason.RecognizedIntent:
@@ -117,19 +118,32 @@ def recognize_intent():
     return intent_result
 
 
-def QnA(question):
-    """Take a question string and return an answer string from QnA maker"""
-    url, key = speech.get_qna_keys()
+def QnA_GPT(Question):
+    """Take a question string and return an answer string from QnA maker powered by GTP-3"""
 
-    payload = '{"question":"' + question + '"}'
-    headers = {
-        "Authorization": key,
-        "Content-Type": "application/json",
-    }
+    openai.api_key = speech.get_openai_key()
 
-    response = requests.request("POST", url, headers=headers, data=payload)
+    start_sequence = "\nA:"
+    restart_sequence = "\n\nQ: "
+    formatted_question = restart_sequence + Question
+    print(formatted_question)
 
-    return response.text
+    response = openai.Completion.create(
+        engine="davinci",
+        prompt='I am a highly intelligent question answering bot. If you ask me a question that is rooted in truth, I will give you the answer. If you ask me a question that is nonsense, trickery, or has no clear answer, I will respond with "Unknown".\n\nQ: What is human life expectancy in the United States?\nA: Human life expectancy in the United States is 78 years.\n\nQ: Who was president of the United States in 1955?\nA: Dwight D. Eisenhower was president of the United States in 1955.\n\nQ: Which party did he belong to?\nA: He belonged to the Republican Party.\n\nQ: What is the square root of banana?\nA: Unknown\n\nQ: How does a telescope work?\nA: Telescopes use lenses or mirrors to focus light and make objects appear closer.\n\nQ: Where were the 1992 Olympics held?\nA: The 1992 Olympics were held in Barcelona, Spain.\n\nQ: How many squigs are in a bonk?\nA: Unknown\n\nQ: what is your name?\nA: My name is Rory\n\nQ: what is your name?\nA: My name is Rory\n\nQ: what is the flu\nA: The flu is a contagious respiratory illness caused by influenza viruses.\n\nQ: Who made you?\n\nA: I was made by Hello Robot, but now I live at Avanade\n'
+        + formatted_question
+        + start_sequence,
+        temperature=0,
+        max_tokens=100,
+        top_p=1,
+        frequency_penalty=0,
+        presence_penalty=0,
+        stop=["\n"],
+    )
+
+    reply = response["choices"][0]["text"]
+
+    return reply
 
 
 async def run_command(instruction, move_amount):  # scan:ignore

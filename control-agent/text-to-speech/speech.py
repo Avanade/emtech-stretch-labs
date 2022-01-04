@@ -78,6 +78,12 @@ def get_qna_keys():
     return url, key
 
 
+def get_openai_key():
+    """Retrieve Keys for openai"""
+    key = os.getenv("OPENAI_KEY")
+    return key
+
+
 def get_luis_keys():
     """Retrieve Keys for LUIS app"""
 

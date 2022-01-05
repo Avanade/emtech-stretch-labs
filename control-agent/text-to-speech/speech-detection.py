@@ -122,7 +122,7 @@ def QnA_GPT(Question):
     """Take a question string and return an answer string from QnA maker powered by GTP-3"""
 
     openai.api_key = os.getenv("OPENAI_API_KEY")
-    openai.api_key = "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"
+    openai.api_key = speech.get_openai_key()
 
     start_sequence = "\nAI:"
     restart_sequence = "\nHuman: "

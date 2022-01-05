@@ -85,8 +85,8 @@ def recognize_intent():
 
     # if low score, do QnA
     if intentJson["topScoringIntent"]["score"] < LUIS_CONFIDENCE_LIMIT:
-        qna = json.loads(QnA_GPT(intent_result.text))
-        return qna["answers"][0]["answer"]
+        qna = QnA_GPT(intent_result.text)
+        return qna
 
     if intent_result.reason == speechsdk.ResultReason.RecognizedIntent:
         print(
@@ -129,7 +129,7 @@ def QnA_GPT(Question):
     formatted_question = restart_sequence + Question
 
     # open the starting prompt - used to store the persistent personality of the bot
-    with open("startprompt.txt", "r") as file:
+    with open("control-agent/text-to-speech/startprompt.txt", "r") as file:
         start_prompt = file.read()
 
     # open the existing conversation prompt - used to store contextual information from the current conversations

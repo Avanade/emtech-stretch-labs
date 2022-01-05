@@ -1,0 +1,31 @@
+
+Human: What's your name?
+AI: My name is Rory.
+Human: Where are you from, Rory?
+AI: I was made by hello robot, but now I live at Avanade.
+Human: What is avanade?
+AI: Avanade is a company that helps humans be more productive.
+Human: How do they help humans?
+AI: Humans can get together and talk over the phone, or online, to get to their next great idea.
+Human: It's my name.
+AI: That is a really cool name.
+Human: What is my name?
+AI: Your name is Jenny.
+Human: My name is Fergus.
+AI: Hi Fergus.
+Human: Me, what my name is.
+AI: Your name is Jenny.
+Human: Jenny
+AI: I\'m doing well how are you?
+Human: Why am I Jenny?
+AI: I don't know.
+Human: Who is Jenny?
+AI: You are Jenny.
+Human: I'm Fergus
+AI: Hi Fergus.
+Human: So what's my name?
+AI: Your name is Jenny.
+Human: It's not.
+AI: I don't know.
+Human: My name is not Jenny.
+AI: That is a really cool name.

@@ -121,25 +121,40 @@ def recognize_intent():
 def QnA_GPT(Question):
     """Take a question string and return an answer string from QnA maker powered by GTP-3"""
 
-    openai.api_key = speech.get_openai_key()
+    openai.api_key = os.getenv("OPENAI_API_KEY")
+    openai.api_key = "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"
 
-    start_sequence = "\nA:"
-    restart_sequence = "\n\nQ: "
+    start_sequence = "\nAI:"
+    restart_sequence = "\nHuman: "
     formatted_question = restart_sequence + Question
-    print(formatted_question)
+
+    # open the starting prompt - used to store the persistent personality of the bot
+    with open("startprompt.txt", "r") as file:
+        start_prompt = file.read()
+
+    # open the existing conversation prompt - used to store contextual information from the current conversations
+    with open("convoprompt.txt", "r") as file:
+        conversation_prompt = file.read()
+
+    full_prompt = (
+        start_prompt + conversation_prompt + formatted_question + start_sequence
+    )
 
     response = openai.Completion.create(
         engine="davinci",
-        prompt='I am a highly intelligent question answering bot. If you ask me a question that is rooted in truth, I will give you the answer. If you ask me a question that is nonsense, trickery, or has no clear answer, I will respond with "Unknown".\n\nQ: What is human life expectancy in the United States?\nA: Human life expectancy in the United States is 78 years.\n\nQ: Who was president of the United States in 1955?\nA: Dwight D. Eisenhower was president of the United States in 1955.\n\nQ: Which party did he belong to?\nA: He belonged to the Republican Party.\n\nQ: What is the square root of banana?\nA: Unknown\n\nQ: How does a telescope work?\nA: Telescopes use lenses or mirrors to focus light and make objects appear closer.\n\nQ: Where were the 1992 Olympics held?\nA: The 1992 Olympics were held in Barcelona, Spain.\n\nQ: How many squigs are in a bonk?\nA: Unknown\n\nQ: what is your name?\nA: My name is Rory\n\nQ: what is your name?\nA: My name is Rory\n\nQ: what is the flu\nA: The flu is a contagious respiratory illness caused by influenza viruses.\n\nQ: Who made you?\n\nA: I was made by Hello Robot, but now I live at Avanade\n'
-        + formatted_question
-        + start_sequence,
-        temperature=0,
+        prompt=full_prompt,
+        temperature=0.9,
         max_tokens=100,
         top_p=1,
-        frequency_penalty=0,
-        presence_penalty=0,
+        frequency_penalty=0.1,
+        presence_penalty=0.6,
         stop=["\n"],
     )
+
+    # update the current conversation prompt
+    f = open("convoprompt.txt", "a")
+    f.write(formatted_question + start_sequence + response["choices"][0]["text"])
+    f.close()
 
     reply = response["choices"][0]["text"]
 
@@ -400,6 +415,8 @@ run = True
 speech.speak("starting up")
 # start camera
 realsense = Realsense()
+# initialise conversation memory
+open("convoprompt.txt", "w").close()
 
 
 while run == True:

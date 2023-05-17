@@ -2,6 +2,6 @@ black==21.6b0
 pyngrok==5.0.5
 pillow==9.3.0
 uvicorn==0.14.0
-starlette==0.25.0
+starlette==0.27.0
 python-dotenv==0.17.0
 asyncio==3.4.3
